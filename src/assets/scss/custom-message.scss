@@ -1,0 +1,33 @@
+.el-message.custom-message {
+  padding-left: 44px;
+  padding-right: 44px;
+  .el-message__icon {
+    position: absolute;
+    left: 20px;
+    top: 18px;
+  }
+  .el-message__closeBtn {
+    position: absolute;
+    right: 20px;
+    top: 26px;
+  }
+  .message-box {
+    padding-right: 30px;
+    min-width: 300px;
+    &-first-line {
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.88);
+      line-height: 24px;
+    }
+
+    &-second-line {
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.65);
+      line-height: 22px;
+    }
+  }
+}

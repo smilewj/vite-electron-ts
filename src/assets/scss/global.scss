@@ -1,0 +1,116 @@
+@import url('../fonts/font.scss');
+
+:root {
+  --page-header-height: 88px;
+  --page-min-width: 1360px;
+  --page-padding-left-right: 5%;
+}
+
+@media (height <= 900px) {
+  :root {
+    --page-header-height: 70px;
+  }
+}
+
+html,
+body,
+#app {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fbfcff;
+}
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
+
+/* 字体大小全局样式 */
+@for $i from 10 through 36 {
+  .font#{$i} {
+    font-size: #{$i}px !important;
+  }
+}
+@for $i from 1 through 9 {
+  .fw#{$i * 100} {
+    font-weight: #{$i * 100} !important;
+  }
+}
+
+/* 外边距、内边距全局样式 */
+@for $i from 0 through 40 {
+  .mt#{$i} {
+    margin-top: #{$i}px !important;
+  }
+  .mr#{$i} {
+    margin-right: #{$i}px !important;
+  }
+  .mb#{$i} {
+    margin-bottom: #{$i}px !important;
+  }
+  .ml#{$i} {
+    margin-left: #{$i}px !important;
+  }
+  .pt#{$i} {
+    padding-top: #{$i}px !important;
+  }
+  .pr#{$i} {
+    padding-right: #{$i}px !important;
+  }
+  .pb#{$i} {
+    padding-bottom: #{$i}px !important;
+  }
+  .pl#{$i} {
+    padding-left: #{$i}px !important;
+  }
+}
+
+/* 滚动条全局样式 */
+::-webkit-scrollbar-track-piece {
+  background: rgba(255, 255, 255, 0);
+}
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0);
+}
+::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+input:-internal-autofill-selected {
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.mlAuto {
+  margin-left: auto !important;
+}
+.mrAuto {
+  margin-right: auto !important;
+}
+
+.text-popper {
+  max-width: 600px !important;
+  word-break: break-all;
+}

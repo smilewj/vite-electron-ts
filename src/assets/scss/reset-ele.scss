@@ -1,0 +1,185 @@
+$colorPrimary: #5968fe;
+$colorSuccess: #52c41a;
+$colorDanger: #ff4d4f;
+
+:root {
+  --el-color-primary: #{$colorPrimary} !important;
+  --el-color-primary-light-3: #{lighten($colorPrimary, 10%)} !important;
+  --el-color-primary-light-5: #{lighten($colorPrimary, 15%)} !important;
+  --el-color-primary-light-7: #{lighten($colorPrimary, 20%)} !important;
+  --el-color-primary-light-8: #{lighten($colorPrimary, 25%)} !important;
+  --el-color-primary-light-9: #{lighten($colorPrimary, 30%)} !important;
+  --el-color-primary-dark-2: #{darken($colorPrimary, 5%)} !important;
+
+  --el-color-success: #{$colorSuccess} !important;
+  --el-color-success-dark-2: #{darken($colorSuccess, 5%)} !important;
+
+  --el-color-danger: #{$colorDanger} !important;
+  --el-color-danger-dark-2: #{darken($colorDanger, 5%)} !important;
+
+  --el-color-error: #{$colorDanger} !important;
+  --el-color-error-dark-2: #{darken($colorDanger, 5%)} !important;
+}
+
+// 提示框样式重写
+.el-message-box {
+  --el-messagebox-width: 474px;
+  --el-messagebox-padding-primary: 24px !important;
+
+  &.result-message-box {
+    .el-message-box__header {
+      padding: 0 !important;
+      .el-message-box__title {
+        display: none;
+      }
+    }
+    .el-message-box__content {
+      padding: 24px;
+      padding-top: 30px;
+      padding-bottom: 16px;
+      .el-message-box__message {
+        padding: 0;
+        padding-left: 0;
+      }
+    }
+    .result-message {
+      &-first-line {
+        font-size: 18px;
+        margin-top: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.85);
+        line-height: 25px;
+      }
+
+      &-second-line {
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 22px;
+        margin-top: 12px;
+      }
+    }
+  }
+
+  &.common-message-box {
+    .el-message-box__header {
+      padding: 0 !important;
+      .el-message-box__title {
+        display: none;
+      }
+    }
+    .el-message-box__content {
+      padding: 24px;
+      .el-message-box__message {
+        padding: 0;
+        padding-left: 0;
+      }
+    }
+
+    .custom-message-box-container {
+      display: flex;
+      position: relative;
+    }
+    .custom-message-box-status {
+      position: relative;
+      top: 0;
+      transform: unset;
+      flex-shrink: 0;
+      margin-right: 13px;
+      display: block !important;
+      .el-icon {
+        position: relative !important;
+      }
+    }
+    .custom-message-box-content {
+      flex: 1;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      line-height: 20px;
+      padding-top: 0;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.65);
+    }
+    .custom-message-box-title {
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.85);
+      line-height: 24px;
+      margin-bottom: 12px;
+      padding-right: 20px;
+    }
+    .custom-message-box-message {
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      line-height: 20px;
+      padding-top: 0;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  .el-message-box__status {
+    display: none;
+  }
+  .el-message-box__header {
+    .el-message-box__title {
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.85);
+      line-height: 24px;
+      padding-left: 32px;
+      // white-space: nowrap;
+    }
+    .el-message-box__headerbtn {
+      z-index: 10;
+      .el-message-box__close {
+        color: #000000;
+        font-size: 16px;
+      }
+    }
+  }
+  .el-message-box__content {
+    --el-messagebox-content-color: rgba(0, 0, 0, 0.65);
+    --el-messagebox-content-font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    line-height: 20px;
+    padding-top: 0;
+
+    .el-message-box__message {
+      padding-left: 32px;
+    }
+  }
+  .el-message-box__btns {
+    padding: 12px 24px 14px 24px;
+    .el-button {
+      height: 32px !important;
+    }
+    .el-button + .el-button {
+      margin-left: 8px;
+    }
+  }
+}
+
+.el-message-box.my-danger-message-box {
+  .el-message-box__btns .el-button.el-button--primary {
+    --el-button-text-color: var(--el-color-white);
+    --el-button-bg-color: var(--el-color-danger);
+    --el-button-border-color: var(--el-color-danger);
+    --el-button-outline-color: var(--el-color-danger-light-5);
+    --el-button-active-color: var(--el-color-danger-dark-2);
+    --el-button-hover-text-color: var(--el-color-white);
+    --el-button-hover-link-text-color: var(--el-color-danger-light-5);
+    --el-button-hover-bg-color: var(--el-color-danger-light-3);
+    --el-button-hover-border-color: var(--el-color-danger-light-3);
+    --el-button-active-bg-color: var(--el-color-danger-dark-2);
+    --el-button-active-border-color: var(--el-color-danger-dark-2);
+    --el-button-disabled-text-color: var(--el-color-white);
+    --el-button-disabled-bg-color: var(--el-color-danger-light-5);
+    --el-button-disabled-border-color: var(--el-color-danger-light-5);
+  }
+}
