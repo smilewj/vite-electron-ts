@@ -13,6 +13,7 @@ let config: ResolvedConfig | undefined;
 export default function ElectronBuildPlugin(): Plugin {
   return {
     name: 'electron-build-plugin',
+    apply: 'build',
     configResolved(resolvedConfig) {
       // 存储最终解析的配置
       config = resolvedConfig;

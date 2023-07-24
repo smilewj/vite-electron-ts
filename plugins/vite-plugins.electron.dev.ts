@@ -15,6 +15,7 @@ let fsWatcher: FSWatcher | undefined;
 export default function ElectronDevPlugin(): Plugin {
   return {
     name: 'electron-dev-plugin',
+    apply: 'serve',
     configureServer(server) {
       buildAppNode();
       server.httpServer?.once('listening', () => {
