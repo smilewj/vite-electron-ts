@@ -1,9 +1,10 @@
 import { BrowserWindow, type BrowserWindowConstructorOptions } from 'electron';
 import { merge } from 'lodash';
+import path from 'path';
 
 const defaultConfig: BrowserWindowConstructorOptions = {
-  width: 800,
-  height: 600,
+  width: 1200,
+  height: 750,
   webPreferences: {
     nodeIntegration: true, // 集成Node
     webSecurity: false, // 禁用同源策略
@@ -13,7 +14,8 @@ const defaultConfig: BrowserWindowConstructorOptions = {
     plugins: true, // 支持插件
     backgroundThrottling: false, // 在页面成为背景时不限制动画和计时器
     navigateOnDragDrop: true, // 将文件或链接拖放到页面上时是否触发页面跳转
-    contextIsolation: false, // 关闭渲染进程的沙箱
+    contextIsolation: true, // 关闭渲染进程的沙箱
+    preload: path.join(__dirname, 'preload.js'),
   },
   // frame: false,
   // titleBarStyle: 'hidden',

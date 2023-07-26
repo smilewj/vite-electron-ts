@@ -14,6 +14,15 @@ export const buildConfig = {
  * 打包electron代码
  */
 export function buildAppNode() {
+  // 打包 preload
+  require('esbuild').buildSync({
+    entryPoints: ['node/preload/index.ts'],
+    bundle: true, // 是否把所有依赖都打进去
+    outfile: `${buildConfig.mainDir}/preload.js`,
+    platform: 'node', // 指定运行环境
+    target: 'node16', // 指定node版本
+    external: ['electron'], // 排除electron依赖
+  });
   require('esbuild').buildSync({
     entryPoints: ['node/index.ts'],
     bundle: true, // 是否把所有依赖都打进去
