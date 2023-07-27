@@ -1,3 +1,5 @@
+import type { Ref } from 'vue';
+
 /**
  * 存储在本地文件中的音乐信息的key
  */
@@ -45,4 +47,5 @@ export type PlayerType = {
    * 播放
    */
   play: () => void;
+  elRef: Ref<HTMLMediaElement | undefined>;
 };

@@ -134,6 +134,7 @@ export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
     start: startPlayMusic,
     pause: pauseMusic,
     play: playMusic,
+    elRef: audioRef,
   };
 
   return player;
