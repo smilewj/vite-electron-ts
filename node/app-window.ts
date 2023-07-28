@@ -18,7 +18,7 @@ const defaultConfig: BrowserWindowConstructorOptions = {
     preload: path.join(__dirname, 'preload.js'),
   },
   // frame: false,
-  // titleBarStyle: 'hidden',
+  titleBarStyle: 'hidden',
   show: false,
   backgroundColor: '#000',
 };
