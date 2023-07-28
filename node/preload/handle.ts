@@ -19,7 +19,7 @@ export default function initIpcMainHandle() {
 async function handleOpenMusicFiles() {
   const options: OpenDialogOptions = {
     properties: ['createDirectory', 'openFile', 'multiSelections'],
-    filters: [{ extensions: ['.mp3'], name: '选择音乐' }],
+    filters: [{ extensions: ['mp3'], name: '选择音乐' }],
   };
   const { canceled, filePaths } = await dialog.showOpenDialog(options);
   if (!canceled) {

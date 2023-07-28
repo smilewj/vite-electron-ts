@@ -62,7 +62,7 @@ export default function ElectronBuildPlugin(): Plugin {
           },
           win: {
             icon: path.resolve(process.cwd(), 'node/assets/icon.ico'),
-            target: 'exe',
+            target: 'portable',
           },
           dmg: {
             icon: path.resolve(process.cwd(), 'node/assets/icon.icns'),
