@@ -17,6 +17,8 @@ export function useMusicPlayAnimation() {
   let maxLineHeight: number;
   let canvasWidth: number;
   let canvasHeight: number;
+  let offset: number;
+  let allColors: Array<string>;
 
   function handleSizeChange({ width, height }: SizeObParams) {
     initCanvas({ width, height });
@@ -30,11 +32,11 @@ export function useMusicPlayAnimation() {
     canvasHeight = height * devicePixelRatio;
     canvasDom.width = canvasWidth;
     canvasDom.height = canvasHeight;
-    radius = Math.min(canvasWidth, canvasHeight) / 10;
-    maxLineHeight = radius * 5;
+    radius = Math.min(canvasWidth, canvasHeight) / 20;
+    maxLineHeight = radius * 10;
     ctx.translate(canvasWidth / 2, canvasHeight / 2);
     ctx.rotate(-Math.PI / 2);
-    draw(new Array(200).fill(0), 255);
+    // draw(new Array(200).fill(0), 255);
   }
 
   function draw(data: number[] | Uint8Array, maxValue: number) {
@@ -48,7 +50,7 @@ export function useMusicPlayAnimation() {
       const ele = data[i];
       const rate = ele / maxValue;
       const lineHeight = rate * maxLineHeight + radius;
-      const colorValue = getGradientColor(i, data.length);
+      const colorValue = allColors?.[i];
 
       const deg = delta * i;
       const x1 = radius * Math.cos(deg) - radius; // 邻边
@@ -68,8 +70,8 @@ export function useMusicPlayAnimation() {
 
   function getGradientColor(index: number, totalColors: number) {
     // 设置渐变的起始颜色和结束颜色（这里使用RGB表示）
-    const startColor = [255, 0, 0]; // 红色
-    const endColor = [0, 0, 255]; // 蓝色
+    const startColor = [0, 255, 255];
+    const endColor = [255, 0, 120];
 
     // 计算每个分量的渐变步长
     const stepR = (endColor[0] - startColor[0]) / (totalColors - 1);
@@ -99,6 +101,15 @@ export function useMusicPlayAnimation() {
     const source = audioCtx.createMediaElementSource(player!.elRef!.value!);
     source.connect(analyser);
     analyser.connect(audioCtx.destination);
+    offset = Math.floor((buffer.length * 2) / 3);
+    const colors = new Array(offset);
+    for (let i = 0; i < offset; i++) {
+      colors[i] = getGradientColor(i, offset);
+    }
+    allColors = new Array(offset * 2);
+    for (let i = 0; i < offset; i++) {
+      allColors[i] = allColors[allColors.length - i - 1] = colors[i];
+    }
   }
 
   function updateDraw() {
@@ -107,8 +118,6 @@ export function useMusicPlayAnimation() {
       return;
     }
     analyser.getByteFrequencyData(buffer);
-
-    const offset = Math.floor((buffer.length * 2) / 3);
     const data = new Array(offset * 2);
     for (let i = 0; i < offset; i++) {
       data[i] = data[data.length - i - 1] = buffer[i];

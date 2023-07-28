@@ -51,10 +51,21 @@ export default function ElectronBuildPlugin(): Plugin {
           asar: true, // 开启打包压缩
           appId: 'music-player',
           productName: '音乐播放器',
-          // 按照配置
+          // 安装配置
           nsis: {
             oneClick: false, // 取消一键安装
             allowToChangeInstallationDirectory: true, // 允许用户选择安装目录
+          },
+          mac: {
+            icon: path.resolve(process.cwd(), 'node/assets/icon.icns'),
+            target: 'dmg',
+          },
+          win: {
+            icon: path.resolve(process.cwd(), 'node/assets/icon.ico'),
+            target: 'exe',
+          },
+          dmg: {
+            icon: path.resolve(process.cwd(), 'node/assets/icon.icns'),
           },
         },
       });
