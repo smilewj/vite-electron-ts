@@ -1,5 +1,5 @@
 import { BrowserWindow, type BrowserWindowConstructorOptions } from 'electron';
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import path from 'path';
 
 const defaultConfig: BrowserWindowConstructorOptions = {
