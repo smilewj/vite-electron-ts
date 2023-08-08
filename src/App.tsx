@@ -4,10 +4,12 @@ import zhCn from '@/locale/zh-cn';
 import { ElConfigProvider } from 'element-plus';
 import { RouterView } from 'vue-router';
 import { playerSymbol, type PlayerType } from './constant';
-import { createMusicPlayer, renderMusicAudio } from './hooks/music-player-hook';
+import { createMusicPlayer, initMusicData, renderMusicAudio } from './hooks/music-player-hook';
 
 export default defineComponent({
   setup() {
+    initMusicData();
+
     const { render: playerRender, audioRef } = renderMusicAudio(() => player);
 
     const player = createMusicPlayer(audioRef);

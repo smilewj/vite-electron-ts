@@ -1,10 +1,10 @@
 import type { LocalMusicItem } from './constant';
 
 export interface IElectronAPI {
-  openMusicFiles: () => Promise<LocalMusicItem[] | undefined>;
+  selectMusicFiles: () => Promise<LocalMusicItem[] | undefined>;
   storeSet: ({ key: string, value: any }) => Promise<void>;
   storeGet: <T>(key: string) => Promise<T>;
-  readFileSync: (path: string) => Promise<string>;
+  readFileSync: (path: string) => Promise<string | undefined>;
 }
 
 declare global {

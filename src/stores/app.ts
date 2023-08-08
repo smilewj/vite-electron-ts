@@ -1,4 +1,4 @@
-import { playingMusicSessionKey, type LocalMusicItem, type PlayingMusicType } from '@/constant';
+import { playingMusicSessionKey, type LocalMusicItem, type PlayingMusicType, musicsElectronStoreKey } from '@/constant';
 import storage from '@/utils/storage';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -15,7 +15,8 @@ export const useAppStore = defineStore('app', () => {
    * 设置音乐列表
    * @param musics
    */
-  function setLocalMusics(musics: LocalMusicItem[]) {
+  async function setLocalMusics(musics: LocalMusicItem[]) {
+    await window.electronAPI.storeSet({ key: musicsElectronStoreKey, value: musics });
     localMusics.value = musics;
   }
 
@@ -32,10 +33,30 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
+  /**
+   * 读取本地音乐列表
+   */
+  async function getLocalMusics() {
+    const localMusics = await window.electronAPI.storeGet<LocalMusicItem[] | undefined>(musicsElectronStoreKey);
+    setLocalMusics(localMusics || []);
+  }
+
+  /**
+   * 删除本地音乐
+   * @param id
+   */
+  async function deleteLocalMusicById(id: string) {
+    const localMusics = (await window.electronAPI.storeGet<LocalMusicItem[] | undefined>(musicsElectronStoreKey)) || [];
+    const filterLocalMusics = localMusics.filter((it) => it.id !== id);
+    setLocalMusics(filterLocalMusics);
+  }
+
   return {
     localMusics,
     playingMusic,
     setLocalMusics,
     setPlayingMusic,
+    getLocalMusics,
+    deleteLocalMusicById,
   };
 });

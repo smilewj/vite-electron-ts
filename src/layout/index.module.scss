@@ -1,0 +1,163 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  --layout-left-width: 210px;
+  --layout-box-shadow-color: #00000010;
+  &-left {
+    width: var(--layout-left-width);
+    height: 100%;
+    box-shadow: 2px 0 6px var(--layout-box-shadow-color);
+    display: flex;
+    flex-direction: column;
+    &-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 45px 0;
+      flex-shrink: 0;
+      &-image {
+        width: 45px;
+        height: 45px;
+      }
+      &-name {
+        font-family: 'pmzdcst';
+        font-size: 28px;
+        margin-left: 10px;
+      }
+    }
+  }
+  &-right {
+    width: calc(100% - var(--layout-left-width));
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.menu {
+  flex: 1;
+  overflow: auto;
+  padding: 0 20px;
+  &-item {
+    color: #00000073;
+    &-link {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 3px 10px;
+      opacity: 0.8;
+      user-select: none;
+      &-name {
+        font-size: 16px;
+      }
+    }
+    &-link-active {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      opacity: 1;
+    }
+    &-label {
+      font-size: 12px;
+      opacity: 0.5;
+      padding: 0 10px;
+      user-select: none;
+    }
+    &-children {
+      margin-top: 10px;
+    }
+  }
+}
+.content {
+  flex: 1;
+  overflow: auto;
+}
+.player-ui {
+  width: 100%;
+  height: 70px;
+  box-shadow: 0 -2px 6px var(--layout-box-shadow-color);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  &-left {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    &-image {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: rgba(207, 236, 231, 0.5);
+      color: rgb(71, 158, 154);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+      }
+    }
+    &-info {
+      overflow: hidden;
+      margin-left: 10px;
+      &-name {
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  &-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    :global {
+      .el-link {
+        color: #000000b9;
+      }
+    }
+  }
+  &-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    &-time {
+      display: flex;
+      align-items: center;
+    }
+    &-volume {
+      display: flex;
+      &-icon {
+        font-size: 22px;
+        cursor: pointer;
+        &:focus {
+          outline: none;
+        }
+      }
+      &-popover {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        &-value {
+          font-size: 12px;
+        }
+        &-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

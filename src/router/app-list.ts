@@ -1,11 +1,20 @@
 import type { RouteRecordRaw } from 'vue-router';
+import AppRouter from '@/views/AppRouter';
+import PageLocal from '@/pages/LocalMusic';
 
 const appList: RouteRecordRaw[] = [
   {
-    path: '/home',
-    component: () => import('@/pages/PageHome'),
-    name: '首页',
-    meta: { name: '首页' },
+    path: '/my',
+    component: AppRouter,
+    name: '我的音乐',
+    redirect: { name: '本地歌曲' },
+    children: [
+      {
+        path: 'local',
+        component: PageLocal,
+        name: '本地歌曲',
+      },
+    ],
   },
 ];
 

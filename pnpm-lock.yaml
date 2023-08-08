@@ -31,6 +31,7 @@ specifiers:
   highlight.js: ^11.8.0
   js-md5: ^0.7.3
   lodash: ^4.17.21
+  node-id3: ^0.2.6
   npm-run-all: ^4.1.5
   pinia: ^2.0.32
   prettier: ^2.8.4
@@ -61,6 +62,7 @@ dependencies:
   highlight.js: 11.8.0
   js-md5: 0.7.3
   lodash: 4.17.21
+  node-id3: 0.2.6
   pinia: 2.1.4_typescript@4.8.4+vue@3.3.4
   vue: 3.3.4
   vue-router: 4.2.4_vue@3.3.4
@@ -4176,6 +4178,13 @@ packages:
       safer-buffer: 2.1.2
     dev: false
 
+  /iconv-lite/0.6.2:
+    resolution: {integrity: sha512-2y91h5OpQlolefMPmUlivelittSWy0rP+oYVpn6A7GwVHNE8AWzoYOBNmlwks3LobaJxgHCYZAnyNo2GgpNRNQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: false
+
   /iconv-lite/0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
@@ -5225,6 +5234,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /node-id3/0.2.6:
+    resolution: {integrity: sha512-w8GuKXLlPpDjTxLowCt/uYMhRQzED3cg2GdSG1i6RSGKeDzPvxlXeLQuQInKljahPZ0aDnmyX7FX8BbJOM7REg==}
+    dependencies:
+      iconv-lite: 0.6.2
+    dev: false
 
   /node-releases/2.0.13:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}

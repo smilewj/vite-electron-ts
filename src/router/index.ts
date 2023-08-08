@@ -1,13 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import AppRouter from '@/views/AppRouter';
 import appList from '@/router/app-list';
 import { getLoadingInstance, loadingService } from '@/hooks/el-loading-service';
+import AppLayout from '@/layout';
 
 const routes = [
   {
     path: '/',
     name: 'APP',
-    component: AppRouter,
+    component: AppLayout,
     children: appList,
     redirect: { name: appList[0]?.name },
   },

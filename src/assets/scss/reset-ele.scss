@@ -23,7 +23,7 @@ $colorDanger: #ff4d4f;
 
 // 提示框样式重写
 .el-message-box {
-  --el-messagebox-width: 474px;
+  --el-messagebox-width: 400px;
   --el-messagebox-padding-primary: 24px !important;
 
   &.result-message-box {
@@ -181,5 +181,15 @@ $colorDanger: #ff4d4f;
     --el-button-disabled-text-color: var(--el-color-white);
     --el-button-disabled-bg-color: var(--el-color-danger-light-5);
     --el-button-disabled-border-color: var(--el-color-danger-light-5);
+  }
+}
+
+.el-popover.el-popper.volume-popover {
+  min-width: auto;
+  width: auto !important;
+  padding: var(--el-popover-padding) 0;
+  .el-slider {
+    --el-slider-button-size: 12px;
+    --el-slider-height: 5px;
   }
 }

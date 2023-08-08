@@ -20,29 +20,19 @@ export function useMusicList() {
    * 添加本地音乐
    */
   async function handleSelectFiles() {
-    const res = await window.electronAPI.openMusicFiles();
+    const res = await window.electronAPI.selectMusicFiles();
     if (!res) return;
     const localMusics = (await window.electronAPI.storeGet<LocalMusicItem[] | undefined>(musicsElectronStoreKey)) || [];
     const filterRes = res.filter((it) => !localMusics.map((it) => it.path).includes(it.path));
     const newMusics = [...filterRes, ...localMusics];
-    await window.electronAPI.storeSet({ key: musicsElectronStoreKey, value: newMusics });
-    getLocalMusics();
-  }
-
-  /**
-   * 读取本地音乐列表
-   */
-  async function getLocalMusics() {
-    const localMusics = await window.electronAPI.storeGet<LocalMusicItem[] | undefined>(musicsElectronStoreKey);
-    appStore.setLocalMusics(localMusics || []);
+    appStore.setLocalMusics(newMusics);
   }
 
   /**
    * 清空本地列表
    */
   async function handleClearFiles() {
-    await window.electronAPI.storeSet({ key: musicsElectronStoreKey, value: [] });
-    getLocalMusics();
+    appStore.setLocalMusics([]);
   }
 
   /**
@@ -53,7 +43,7 @@ export function useMusicList() {
     player.start(item);
   }
 
-  onMounted(getLocalMusics);
+  onMounted(appStore.getLocalMusics);
 
   function render() {
     return (

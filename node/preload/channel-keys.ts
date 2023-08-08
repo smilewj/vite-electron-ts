@@ -1,7 +1,7 @@
 /** 定义通道key */
 export enum CHANNEL_KEYS {
   /** 选择音乐文件 */
-  OPEN_MUSIC_FILES = 'dialog:openMusicFiles',
+  OPEN_MUSIC_FILES = 'dialog:selectMusicFiles',
   /** store 保存数据 */
   STORE_SET = 'store:set',
   /** store 获取数据 */
