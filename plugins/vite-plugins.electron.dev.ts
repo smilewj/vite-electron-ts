@@ -27,7 +27,7 @@ export default function ElectronDevPlugin(): Plugin {
         const electronPath = require('electron') as unknown as string;
 
         function startElectronServer() {
-          electronProcess && electronProcess.kill();
+          electronProcess && electronProcess.kill('SIGKILL');
           buildAppNode();
           electronProcess = spawn(electronPath, [`${buildConfig.mainDir}/${buildConfig.mainName}.js`, url]);
           // 监听 electron 的标准输出
@@ -48,7 +48,7 @@ export default function ElectronDevPlugin(): Plugin {
         });
       });
       server.httpServer?.on('close', () => {
-        electronProcess && electronProcess.kill();
+        electronProcess && electronProcess.kill('SIGKILL');
         fsWatcher && fsWatcher.close();
       });
     },

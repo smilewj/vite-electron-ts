@@ -2,6 +2,7 @@ import type { LocalMusicItem, PlayerType } from '@/constant';
 import { useAppStore } from '@/stores/app';
 import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
 import debMessage from './deb-message';
+import { useRoute } from 'vue-router';
 
 /**
  * 初始化歌曲数据
@@ -11,6 +12,7 @@ export function initMusicData() {
 
   function init() {
     appStore.getLocalMusics();
+    appStore.getLoveMusics();
   }
 
   init();
@@ -98,7 +100,25 @@ export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
   const appStore = useAppStore();
 
   const playingMusic = computed(() => appStore.playingMusic);
-  const localMusics = computed(() => appStore.localMusics);
+
+  const route = useRoute();
+  // 当前的播放列表
+  const currentMusics = computed(() => {
+    const curName = route.name;
+    let list;
+    switch (curName) {
+      case '本地歌曲':
+        list = appStore.localMusics;
+        break;
+      case '我喜欢':
+        list = appStore.loveMusics;
+        break;
+      default:
+        list = appStore.localMusics;
+        break;
+    }
+    return list;
+  });
 
   /**
    * 开始播放音乐
@@ -164,17 +184,17 @@ export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
    * 下一首
    */
   function playNextMusic() {
-    const currentIndex = localMusics.value.findIndex((it) => it.id === playingMusic.value?.id);
+    const currentIndex = currentMusics.value.findIndex((it) => it.id === playingMusic.value?.id);
     if (currentIndex === -1) {
       stopPlay();
       return;
     }
     const nextIndex = currentIndex + 1;
-    if (nextIndex >= localMusics.value.length) {
+    if (nextIndex >= currentMusics.value.length) {
       stopPlay();
       return;
     }
-    const nextMusic = localMusics.value[nextIndex];
+    const nextMusic = currentMusics.value[nextIndex];
     startPlayMusic(nextMusic);
   }
 
@@ -182,7 +202,7 @@ export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
    * 上一首
    */
   function playPrevMusic() {
-    const currentIndex = localMusics.value.findIndex((it) => it.id === playingMusic.value?.id);
+    const currentIndex = currentMusics.value.findIndex((it) => it.id === playingMusic.value?.id);
     if (currentIndex === -1) {
       stopPlay();
       return;
@@ -192,7 +212,7 @@ export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
       stopPlay();
       return;
     }
-    const prevMusic = localMusics.value[prevIndex];
+    const prevMusic = currentMusics.value[prevIndex];
     startPlayMusic(prevMusic);
   }
 

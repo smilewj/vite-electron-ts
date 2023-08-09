@@ -50,7 +50,7 @@ export default function ElectronBuildPlugin(): Plugin {
           files: ['**/*'],
           asar: true, // 开启打包压缩
           appId: 'music-player',
-          productName: '音乐播放器',
+          productName: 'MY音乐',
           // 安装配置
           nsis: {
             oneClick: false, // 取消一键安装

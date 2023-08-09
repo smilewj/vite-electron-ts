@@ -18,7 +18,12 @@ const defaultConfig: BrowserWindowConstructorOptions = {
     preload: path.join(__dirname, 'preload.js'),
   },
   // frame: false,
-  titleBarStyle: 'hidden',
+  // titleBarStyle: 'customButtonsOnHover',
+  // titleBarOverlay: {
+  //   color: '#2f3241',
+  //   symbolColor: '#74b1be',
+  //   height: 60,
+  // },
   show: false,
   backgroundColor: '#000',
 };

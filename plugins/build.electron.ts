@@ -1,3 +1,6 @@
+import { copyFileSync } from 'fs';
+import path from 'path';
+
 /**
  * 打包配置
  */
@@ -31,4 +34,9 @@ export function buildAppNode() {
     target: 'node16', // 指定node版本
     external: ['electron'], // 排除electron依赖
   });
+
+  copyFileSync(
+    path.resolve(process.cwd(), 'node/assets/trayTemplate.png'),
+    path.resolve(process.cwd(), `${buildConfig.mainDir}/trayTemplate.png`),
+  );
 }

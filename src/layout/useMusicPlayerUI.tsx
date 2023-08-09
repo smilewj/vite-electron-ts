@@ -37,6 +37,12 @@ export function useMusicPlayerUI() {
       player?.volume(val / 100);
     },
   });
+  const playingMusicIsLove = computed(() => appStore.isLoveMusicId(playingMusic.value?.id));
+
+  function setLove() {
+    if (!playingMusic.value) return;
+    appStore.setLoveMusicId(playingMusic.value.id);
+  }
 
   function render() {
     const cm = playingMusic.value;
@@ -51,11 +57,13 @@ export function useMusicPlayerUI() {
           </div>
         </div>
         <div class={indexScss['player-ui-center']}>
-          <ElLink type="default" underline={false} class="mr8">
-            <CommonIconVue icon="icon-xihuan" class="font16" />
-          </ElLink>
-          <ElLink type="default" underline={false} class="mr8 color-danger">
-            <CommonIconVue icon="icon-xihuan1" class="font16" />
+          <ElLink
+            type="default"
+            underline={false}
+            class={['mr8', playingMusicIsLove.value ? 'color-danger' : '']}
+            onClick={setLove}
+          >
+            <CommonIconVue icon={playingMusicIsLove.value ? 'icon-xihuan1' : 'icon-xihuan'} class="font16" />
           </ElLink>
           <ElLink type="default" underline={false} onClick={() => player?.prev()}>
             <CommonIconVue icon="icon-shangyishou" class="font26" />

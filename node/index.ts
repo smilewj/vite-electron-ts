@@ -6,6 +6,7 @@ import AppWindow from './app-window';
 import setMenus from './set-menu';
 import isDev from 'electron-is-dev';
 import initIpcMainHandle from './preload/handle';
+import setTray from './setTray';
 
 app.whenReady().then(() => {
   initIpcMainHandle();
@@ -19,7 +20,20 @@ app.whenReady().then(() => {
   }
 
   // 打开调试模式
-  if (isDev) win.webContents.openDevTools();
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
 
   setMenus();
+
+  if (!isDev) {
+    setTray(win);
+  }
+
+  win.on('close', (event) => {
+    event.preventDefault(); // 阻止默认的关闭行为
+    app.dock.hide();
+    win.setSkipTaskbar(true);
+    win.hide();
+  });
 });
