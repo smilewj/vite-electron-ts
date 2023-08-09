@@ -6,7 +6,7 @@ import AppWindow from './app-window';
 import setMenus from './set-menu';
 import isDev from 'electron-is-dev';
 import initIpcMainHandle from './preload/handle';
-import setTray from './setTray';
+import setTray from './set-tray';
 
 app.whenReady().then(() => {
   initIpcMainHandle();
@@ -29,11 +29,4 @@ app.whenReady().then(() => {
   if (!isDev) {
     setTray(win);
   }
-
-  win.on('close', (event) => {
-    event.preventDefault(); // 阻止默认的关闭行为
-    app.dock.hide();
-    win.setSkipTaskbar(true);
-    win.hide();
-  });
 });

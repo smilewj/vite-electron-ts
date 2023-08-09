@@ -1,6 +1,7 @@
 import { Menu, Tray, app, nativeImage } from 'electron';
 import path from 'path';
 import type AppWindow from './app-window';
+const isMac = process.platform === 'darwin';
 
 /**
  * 将应用程序隐藏到系统顶部状态栏（也称为系统托盘）
@@ -40,4 +41,11 @@ export default function setTray(win: AppWindow) {
   ]);
   tray.setToolTip('My音乐'); // 鼠标悬停时显示的提示
   tray.setContextMenu(contextMenu); // 设置上下文菜单
+
+  win.on('close', (event) => {
+    event.preventDefault(); // 阻止默认的关闭行为
+    if (isMac) app.dock.hide();
+    win.setSkipTaskbar(true);
+    win.hide();
+  });
 }
