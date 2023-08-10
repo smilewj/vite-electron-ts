@@ -1,4 +1,7 @@
 import { Menu, MenuItem, shell, type MenuItemConstructorOptions, app } from 'electron';
+import isDev from 'electron-is-dev';
+
+const isMac = process.platform === 'darwin';
 
 const menuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
   {
@@ -42,6 +45,20 @@ const menuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
     ],
   },
 ];
+
+if (isDev) {
+  (menuTemplate[1].submenu as Electron.MenuItemConstructorOptions[]).push({
+    label: '切换开发者工具',
+    accelerator: (() => {
+      if (isMac) {
+        return 'Alt+Command+I';
+      } else {
+        return 'F12';
+      }
+    })(),
+    role: 'toggleDevTools',
+  });
+}
 
 /**
  * 设置系统菜单
