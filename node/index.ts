@@ -7,6 +7,7 @@ import setMenus from './set-menu';
 import isDev from 'electron-is-dev';
 import initIpcMainHandle from './preload/handle';
 import setTray from './set-tray';
+import setDock from './set-dock';
 
 app.whenReady().then(() => {
   initIpcMainHandle();
@@ -25,6 +26,7 @@ app.whenReady().then(() => {
   }
 
   setMenus();
+  setDock();
 
   if (!isDev) {
     setTray(win);
