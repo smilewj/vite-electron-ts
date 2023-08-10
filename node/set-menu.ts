@@ -47,17 +47,29 @@ const menuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
 ];
 
 if (isDev) {
-  (menuTemplate[1].submenu as Electron.MenuItemConstructorOptions[]).push({
-    label: '切换开发者工具',
-    accelerator: (() => {
-      if (isMac) {
-        return 'Alt+Command+I';
-      } else {
-        return 'F12';
-      }
-    })(),
-    role: 'toggleDevTools',
-  });
+  const devMenuItems: MenuItemConstructorOptions[] = [
+    {
+      label: '开发者工具',
+      accelerator: (() => {
+        if (isMac) {
+          return 'Alt+Command+I';
+        } else {
+          return 'F12';
+        }
+      })(),
+      role: 'toggleDevTools',
+    },
+    {
+      label: '刷新页面',
+      accelerator: 'CmdOrCtrl+R',
+      click: (item, focusedWindow) => {
+        if (focusedWindow) {
+          focusedWindow.reload();
+        }
+      },
+    },
+  ];
+  (menuTemplate[1].submenu as MenuItemConstructorOptions[]).push(...devMenuItems);
 }
 
 /**

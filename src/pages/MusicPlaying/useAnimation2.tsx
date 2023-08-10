@@ -4,16 +4,19 @@ import { playerSymbol, type PlayerType } from '@/constant';
 import { getGradientColor } from '@/utils/func';
 
 /**
- * 动画1
+ * 动画2
  * @param canvasData
  * @returns
  */
-export function useAnimation1(canvasData: CanvasDataType) {
-  let radius: number;
-  let maxLineHeight: number;
-  let animationFrameId: number;
+export function useAnimation2(canvasData: CanvasDataType) {
+  let left: number; // 距离左边的距离
+  let bottom: number; // 距离底部的距离
+  let topPoint: [number, number] = [0, 0]; // canvas左上角坐标
   let offset: number;
-  let allColors: Array<string>;
+  let colors: Array<string>;
+  let animationFrameId: number;
+  let lineWidth: number;
+  let maxLineHeight: number;
 
   const player = inject<PlayerType>(playerSymbol);
 
@@ -21,53 +24,45 @@ export function useAnimation1(canvasData: CanvasDataType) {
     if (!canvasData.ctx) return;
     canvasData.ctx.restore();
     canvasData.ctx.save();
-    canvasData.ctx.translate(canvasData.canvasWidth / 2, canvasData.canvasHeight / 2);
-    canvasData.ctx.rotate(-Math.PI / 2);
-    radius = Math.min(canvasData.canvasWidth, canvasData.canvasHeight) / 20;
-    maxLineHeight = radius * 10;
+    left = Math.round(canvasData.canvasWidth / 10);
+    bottom = Math.round(canvasData.canvasHeight / 10);
+    topPoint = [-left, -canvasData.canvasHeight + bottom];
+    lineWidth = canvasData.canvasWidth - left * 2;
+    maxLineHeight = canvasData.canvasHeight - bottom;
+    canvasData.ctx.translate(left, canvasData.canvasHeight - bottom);
   }
 
   function initAutoAnalyser() {
     if (!player?.audioCtx.buffer) return;
     offset = Math.floor((player.audioCtx.buffer.length * 2) / 3);
-    const colors = new Array(offset);
+    colors = new Array(offset);
     for (let i = 0; i < offset; i++) {
       colors[i] = getGradientColor(i, offset);
-    }
-    allColors = new Array(offset * 2);
-    for (let i = 0; i < offset; i++) {
-      allColors[i] = allColors[allColors.length - i - 1] = colors[i];
     }
   }
 
   function draw(data: number[] | Uint8Array, maxValue: number) {
     if (!canvasData.ctx) return;
-    canvasData.ctx.clearRect(
-      -canvasData.canvasHeight / 2,
-      -canvasData.canvasWidth / 2,
-      canvasData.canvasHeight,
-      canvasData.canvasWidth,
-    );
-    const delta = (2 * Math.PI) / data.length;
+    canvasData.ctx.clearRect(...topPoint, canvasData.canvasWidth, canvasData.canvasHeight);
 
-    const w = (radius * Math.sin(delta) * 2) / 2;
+    const delta = lineWidth / data.length;
+
+    const w = (delta * 1) / 3;
 
     for (let i = 0; i < data.length; i++) {
       const ele = data[i];
       const rate = ele / maxValue;
-      const lineHeight = rate * maxLineHeight + radius;
-      const colorValue = allColors?.[i];
+      const colorValue = colors?.[i];
+      const x1 = delta * i;
+      const y1 = 0;
+      const x2 = x1;
+      const y2 = -rate * maxLineHeight;
 
-      const deg = delta * i;
-      const x1 = radius * Math.cos(deg) - radius; // 邻边
-      const y1 = radius * Math.sin(deg); // 对边
-      const x2 = lineHeight * Math.cos(deg) - radius; // 邻边
-      const y2 = lineHeight * Math.sin(deg); // 对边
       canvasData.ctx.beginPath();
       canvasData.ctx.moveTo(x1, y1);
       canvasData.ctx.lineTo(x2, y2);
       canvasData.ctx.lineWidth = w;
-      canvasData.ctx.lineCap = 'round';
+      // canvasData.ctx.lineCap = 'round';
       canvasData.ctx.strokeStyle = colorValue;
       canvasData.ctx.stroke();
       canvasData.ctx.closePath();
@@ -80,11 +75,14 @@ export function useAnimation1(canvasData: CanvasDataType) {
       return;
     }
     player.audioCtx.analyser.getByteFrequencyData(player.audioCtx.buffer);
-    const data = new Array(offset * 2);
+    const data = new Array(offset);
+    let maxValue = 0;
     for (let i = 0; i < offset; i++) {
-      data[i] = data[data.length - i - 1] = player.audioCtx.buffer[i];
+      data[i] = player.audioCtx.buffer[i];
+      if (maxValue < data[i]) maxValue = data[i];
     }
-    draw(data, 300);
+    if (maxValue < 300) maxValue = 300;
+    draw(data, maxValue);
   }
 
   function stopDraw() {
@@ -98,8 +96,8 @@ export function useAnimation1(canvasData: CanvasDataType) {
   onUnmounted(stopDraw);
 
   return {
-    initCanvas1: initCanvas,
-    updateDraw1: updateDraw,
-    stopDraw1: stopDraw,
+    initCanvas2: initCanvas,
+    updateDraw2: updateDraw,
+    stopDraw2: stopDraw,
   };
 }

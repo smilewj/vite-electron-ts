@@ -89,6 +89,23 @@
   width: 100%;
   height: 100%;
   background-color: #000;
+  &-list {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    &-item {
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      &.active {
+        color: var(--el-color-success);
+      }
+    }
+  }
   &-canvas {
     width: 100%;
     height: 100%;
@@ -99,6 +116,7 @@
   position: absolute;
   top: 10px;
   left: 20px;
+  z-index: 99;
   :global {
     .el-link {
       --el-link-text-color: #fff;
