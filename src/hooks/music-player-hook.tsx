@@ -1,4 +1,4 @@
-import type { LocalMusicItem, PlayerType } from '@/constant';
+import type { AudioCtxType, LocalMusicItem, PlayerType } from '@/constant';
 import { useAppStore } from '@/stores/app';
 import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
 import debMessage from './deb-message';
@@ -25,6 +25,11 @@ export function initMusicData() {
 export function renderMusicAudio(getPlayer: () => PlayerType) {
   const audioRef = ref<HTMLMediaElement | undefined>();
   const appStore = useAppStore();
+  const audioCtx: AudioCtxType = {
+    ctx: undefined,
+    analyser: undefined,
+    buffer: undefined,
+  };
 
   const playingMusic = computed(() => appStore.playingMusic);
 
@@ -75,6 +80,27 @@ export function renderMusicAudio(getPlayer: () => PlayerType) {
     appStore.setPlayingMusic(pm);
   }
 
+  /**
+   * 初始化音频分析处理器节点
+   */
+  function initAutoAnalyser() {
+    if (audioCtx.analyser || !audioRef.value) {
+      return;
+    }
+    audioCtx.ctx = new AudioContext();
+    audioCtx.analyser = audioCtx.ctx.createAnalyser();
+    audioCtx.analyser.fftSize = 512;
+    audioCtx.buffer = new Uint8Array(audioCtx.analyser.frequencyBinCount);
+    const source = audioCtx.ctx.createMediaElementSource(audioRef.value);
+    source.connect(audioCtx.analyser);
+    audioCtx.analyser.connect(audioCtx.ctx.destination);
+  }
+
+  onMounted(async () => {
+    await nextTick();
+    initAutoAnalyser();
+  });
+
   function render() {
     return (
       <audio
@@ -89,14 +115,14 @@ export function renderMusicAudio(getPlayer: () => PlayerType) {
     );
   }
 
-  return { render, audioRef };
+  return { render, audioRef, audioCtx };
 }
 
 /**
  * 生成播放器控制方法
  * @param audioRef
  */
-export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
+export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>, audioCtx: AudioCtxType) {
   const appStore = useAppStore();
 
   const playingMusic = computed(() => appStore.playingMusic);
@@ -231,6 +257,7 @@ export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
   onMounted(loadMusicDataPlay);
 
   const player: PlayerType = {
+    audioCtx,
     start: startPlayMusic,
     pause: pauseMusic,
     play: playMusic,

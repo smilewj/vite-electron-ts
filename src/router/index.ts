@@ -1,15 +1,21 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
 import appList from '@/router/app-list';
 import { getLoadingInstance, loadingService } from '@/hooks/el-loading-service';
 import AppLayout from '@/layout';
+import MusicPlaying from '@/pages/MusicPlaying';
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'APP',
     component: AppLayout,
     children: appList,
     redirect: { name: appList[0]?.name },
+  },
+  {
+    path: '/playing',
+    name: 'playing',
+    component: MusicPlaying,
   },
 ];
 

@@ -55,6 +55,10 @@ export const playerSymbol = Symbol('player');
  */
 export type PlayerType = {
   /**
+   * 音频分析器
+   */
+  audioCtx: AudioCtxType;
+  /**
    * 开始播放一个新的音乐
    * @param data 音乐数据
    */
@@ -84,4 +88,13 @@ export type PlayerType = {
    */
   prev: () => void;
   elRef: Ref<HTMLMediaElement | undefined>;
+};
+
+/**
+ * audio 分线器
+ */
+export type AudioCtxType = {
+  ctx: AudioContext | undefined; // 音频分析处理器节点
+  analyser: AnalyserNode | undefined; // 音频分析处理器节点
+  buffer: Uint8Array | undefined; // 音频分析数据
 };

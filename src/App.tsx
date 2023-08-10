@@ -10,9 +10,9 @@ export default defineComponent({
   setup() {
     initMusicData();
 
-    const { render: playerRender, audioRef } = renderMusicAudio(() => player);
+    const { render: playerRender, audioRef, audioCtx } = renderMusicAudio(() => player);
 
-    const player = createMusicPlayer(audioRef);
+    const player = createMusicPlayer(audioRef, audioCtx);
 
     provide<PlayerType>(playerSymbol, player);
 

@@ -4,9 +4,11 @@ import { computed, inject } from 'vue';
 import CommonIconVue from '@/components/CommonIcon.vue';
 import { ElLink, ElPopover, ElSlider } from 'element-plus';
 import { playerSymbol, type PlayerType } from '@/constant';
+import { useRouter } from 'vue-router';
 
 export function useMusicPlayerUI() {
   const player = inject<PlayerType>(playerSymbol);
+  const router = useRouter();
 
   const appStore = useAppStore();
   const playingMusic = computed(() => appStore.playingMusic);
@@ -51,6 +53,9 @@ export function useMusicPlayerUI() {
         <div class={indexScss['player-ui-left']}>
           <div class={indexScss['player-ui-left-image']}>
             {cm?.cover ? <img src={cm.cover} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
+            <div class={indexScss['player-ui-left-image-action']} onClick={() => router.push({ name: 'playing' })}>
+              <CommonIconVue icon="icon-xiangshang" class="font26" />
+            </div>
           </div>
           <div class={indexScss['player-ui-left-info']}>
             <div class={indexScss['player-ui-left-info-name']}>{cm?.name}</div>

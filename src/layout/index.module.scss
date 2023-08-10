@@ -90,6 +90,7 @@
     flex: 1;
     overflow: hidden;
     &-image {
+      position: relative;
       flex-shrink: 0;
       width: 40px;
       height: 40px;
@@ -100,10 +101,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      &:hover {
+        .player-ui-left-image-action {
+          opacity: 1;
+        }
+      }
       img {
         max-width: 100%;
         max-height: 100%;
         object-fit: cover;
+      }
+      &-action {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background-color: rgba($color: #000000, $alpha: 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s;
+        opacity: 0;
       }
     }
     &-info {

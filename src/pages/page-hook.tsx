@@ -1,6 +1,10 @@
 import { playerSymbol, type LocalMusicItem, type PlayerType } from '@/constant';
 import { useAppStore } from '@/stores/app';
 import { computed, inject, type Ref } from 'vue';
+import rootClass from './index.module.scss';
+import { ElLink } from 'element-plus';
+import CommonIconVue from '@/components/CommonIcon.vue';
+import { useRouter } from 'vue-router';
 
 /**
  * 按钮方法
@@ -54,5 +58,28 @@ export function initActionFunction(musicsRef: Ref<LocalMusicItem[]>) {
     handleStop,
     setLove,
     handlePlayMusic,
+  };
+}
+
+/**
+ * 渲染后退按钮
+ * @param delta
+ * @returns
+ */
+export function useRouterBackRender(delta: number = -1) {
+  const router = useRouter();
+
+  function render() {
+    return (
+      <div class={rootClass['router-back']}>
+        <ElLink underline={false} onClick={() => router.go(delta)} type="default">
+          <CommonIconVue icon="icon-xiangxia" class="font24" />
+        </ElLink>
+      </div>
+    );
+  }
+
+  return {
+    routerBackRender: render,
   };
 }
