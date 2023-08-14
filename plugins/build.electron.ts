@@ -16,7 +16,7 @@ export const buildConfig = {
 /**
  * 打包electron代码
  */
-export function buildAppNode() {
+export function buildAppNode(isDev: boolean = false) {
   // 打包 preload
   require('esbuild').buildSync({
     entryPoints: ['node/preload/index.ts'],
@@ -32,7 +32,7 @@ export function buildAppNode() {
     outfile: `${buildConfig.mainDir}/${buildConfig.mainName}.js`,
     platform: 'node', // 指定运行环境
     target: 'node16', // 指定node版本
-    external: ['electron'], // 排除electron依赖
+    external: isDev ? ['electron', 'ffmpeg-static'] : ['electron'], // 排除electron依赖
   });
 
   copyFileSync(

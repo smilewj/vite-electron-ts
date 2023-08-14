@@ -7,6 +7,13 @@ import { buildAppNode, buildConfig } from './build.electron';
 import fs from 'fs';
 import * as ELectronBuilder from 'electron-builder';
 import path from 'path';
+import ffmpegPath from 'ffmpeg-static';
+
+let extraResources: ELectronBuilder.FileSet[] | null;
+if (ffmpegPath) {
+  const ffmpeg = path.basename(ffmpegPath);
+  extraResources = [{ from: ffmpegPath, to: `./${ffmpeg}` }];
+}
 
 let config: ResolvedConfig | undefined;
 
@@ -48,6 +55,7 @@ export default function ElectronBuildPlugin(): Plugin {
             app: appPath,
           },
           files: ['**/*'],
+          extraResources,
           asar: true, // 开启打包压缩
           appId: 'music-player',
           productName: 'MY音乐',

@@ -4,12 +4,13 @@ import store from '../store';
 import path from 'path';
 import md5 from 'js-md5';
 import fs from 'fs';
-import ID3, { type Tags } from 'node-id3';
+import { unitGetAudioDuration, unitGetMusicCover } from '../unit';
 
 export default function initIpcMainHandle() {
   ipcMain.handle(CHANNEL_KEYS.OPEN_MUSIC_FILES, handleSelectMusicFiles);
   ipcMain.handle(CHANNEL_KEYS.STORE_SET, handleStoreSet);
   ipcMain.handle(CHANNEL_KEYS.STORE_GET, handleStoreGet);
+  ipcMain.handle(CHANNEL_KEYS.STORE_DELETE, handleStoreDelete);
   ipcMain.handle(CHANNEL_KEYS.READ_FILE_SYNC, handleReadFileSync);
 }
 
@@ -25,17 +26,19 @@ async function handleSelectMusicFiles() {
   };
   const { canceled, filePaths } = await dialog.showOpenDialog(options);
   if (!canceled) {
-    return filePaths.map((filePath) => {
-      const tags = ID3.read(filePath);
-      const cover = unitGetMusicCover(tags);
+    const listPromise = filePaths.map(async (filePath) => {
+      const cover = unitGetMusicCover(filePath);
+      const duration = await unitGetAudioDuration(filePath);
       return {
         name: path.basename(filePath, path.extname(filePath)),
         fullName: path.basename(filePath),
         path: filePath,
         id: md5(filePath),
         cover,
+        duration,
       };
     });
+    return await Promise.all(listPromise);
   }
 }
 
@@ -63,31 +66,21 @@ function handleStoreGet(event: IpcMainInvokeEvent, key: string) {
   return store.get(key);
 }
 
+/**
+ * 删除存储
+ * @param event
+ * @param key
+ * @returns
+ */
+function handleStoreDelete(event: IpcMainInvokeEvent, key: string) {
+  if (!key || typeof key !== 'string') return;
+  return store.delete(key);
+}
+
 function handleReadFileSync(event: IpcMainInvokeEvent, path: string) {
   if (!path || typeof path !== 'string') return;
   try {
     return fs.readFileSync(path, { encoding: 'base64' });
-  } catch {
-    return undefined;
-  }
-}
-
-/**
- * 获取歌曲封面图
- * @param tags
- * @returns
- */
-function unitGetMusicCover(tags: Tags) {
-  try {
-    const { image } = tags;
-    if (!image) return;
-    if (typeof image === 'string') {
-      return image;
-    }
-    const { mime = 'image/jpeg', imageBuffer } = image;
-    if (!imageBuffer) return;
-    const base64Image = Buffer.from(imageBuffer).toString('base64');
-    return `data:${mime};base64,${base64Image}`;
   } catch {
     return undefined;
   }

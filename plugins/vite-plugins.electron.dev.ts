@@ -28,7 +28,7 @@ export default function ElectronDevPlugin(): Plugin {
 
         function startElectronServer() {
           electronProcess && electronProcess.kill('SIGKILL');
-          buildAppNode();
+          buildAppNode(true);
           electronProcess = spawn(electronPath, [`${buildConfig.mainDir}/${buildConfig.mainName}.js`, url]);
           // 监听 electron 的标准输出
           electronProcess.stdout.on('data', (data) => {

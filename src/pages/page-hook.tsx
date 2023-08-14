@@ -13,6 +13,7 @@ export function initActionFunction(musicsRef: Ref<LocalMusicItem[]>) {
   const appStore = useAppStore();
   const player = inject<PlayerType>(playerSymbol);
   const playingMusic = computed(() => appStore.playingMusic);
+  const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
 
   /**
    * 播放全部
@@ -54,6 +55,7 @@ export function initActionFunction(musicsRef: Ref<LocalMusicItem[]>) {
   return {
     player,
     playingMusic,
+    sessionPlayingMusic,
     handlePlayAll,
     handleStop,
     setLove,

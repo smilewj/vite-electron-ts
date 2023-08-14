@@ -12,9 +12,10 @@ export function useMusicPlayerUI() {
 
   const appStore = useAppStore();
   const playingMusic = computed(() => appStore.playingMusic);
-  const playStatus = computed(() => playingMusic.value?.status);
+  const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
+  const playStatus = computed(() => sessionPlayingMusic.value?.status);
   const currentTime = computed(() => {
-    const current = playingMusic.value?.current || 0;
+    const current = sessionPlayingMusic.value?.current || 0;
     const m = Math.floor(current / 60)
       .toString()
       .padStart(2, '0');

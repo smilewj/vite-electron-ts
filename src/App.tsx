@@ -8,7 +8,7 @@ import { createMusicPlayer, initMusicData, renderMusicAudio } from './hooks/musi
 
 export default defineComponent({
   setup() {
-    initMusicData();
+    initMusicData(() => player);
 
     const { render: playerRender, audioRef, audioCtx } = renderMusicAudio(() => player);
 

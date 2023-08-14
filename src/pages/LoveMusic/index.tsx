@@ -14,7 +14,7 @@ export default defineComponent({
     const appStore = useAppStore();
     const loveMusics = computed(() => appStore.loveMusics);
 
-    const { player, playingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } =
+    const { player, sessionPlayingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } =
       initActionFunction(loveMusics);
 
     return function () {
@@ -43,8 +43,8 @@ export default defineComponent({
                       <ElLink underline={false} class="mr8 color-danger" onClick={() => setLove(it.id)}>
                         <CommonIconVue icon="icon-xihuan1" class="font16" />
                       </ElLink>
-                      {playingMusic.value?.id === it.id ? (
-                        playingMusic.value.status ? (
+                      {sessionPlayingMusic.value?.id === it.id ? (
+                        sessionPlayingMusic.value.status ? (
                           <div class={rootClass['list-item-playing']} onClick={() => player?.pause()}>
                             <img src={iconPlaying} />
                           </div>

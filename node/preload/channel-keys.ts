@@ -6,6 +6,8 @@ export enum CHANNEL_KEYS {
   STORE_SET = 'store:set',
   /** store 获取数据 */
   STORE_GET = 'store:get',
+  /** store 删除数据 */
+  STORE_DELETE = 'store:delete',
   /** 读取文件 */
   READ_FILE_SYNC = 'node:readFileSync',
 }

@@ -6,9 +6,14 @@ import type { Ref } from 'vue';
 export const musicsElectronStoreKey = 'MUSICS_STORE';
 
 /**
- * 存储在session中播放中的音乐的key
+ * 存储在本地文件中播放中的音乐的key
  */
-export const playingMusicSessionKey = 'MUSIC_PLAYING';
+export const playingMusicElectronStoreKey = 'MUSIC_PLAYING';
+
+/**
+ * 存储在本地文件中播放中的音乐的key
+ */
+export const playingMusicSessionKey = 'SESSION_MUSIC_PLAYING';
 
 /**
  * 存储在本地文件中的喜欢的音乐信息的key
@@ -29,20 +34,26 @@ export type LocalMusicItem = {
   path: string;
   /** 封面 */
   cover?: string;
+  /** 总时长 */
+  duration?: number;
 };
 
 /**
  * 播放中的音乐
  */
 export type PlayingMusicType = LocalMusicItem & {
-  /** 当前播放时间（秒） */
-  current: number;
-  /** 总时间（秒） */
-  duration: number;
-  /** 播放状态 */
-  status: boolean;
   /** 播放音量 */
   volume: number;
+};
+
+/**
+ * session 播放中的音乐
+ */
+export type SessionPlayingMusicType = LocalMusicItem & {
+  /** 当前播放时间（秒） */
+  current: number;
+  /** 播放状态 */
+  status: boolean;
 };
 
 /**
@@ -88,6 +99,8 @@ export type PlayerType = {
    */
   prev: () => void;
   elRef: Ref<HTMLMediaElement | undefined>;
+
+  initPlaying: () => Promise<void>;
 };
 
 /**

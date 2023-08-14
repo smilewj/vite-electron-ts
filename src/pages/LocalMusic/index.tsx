@@ -17,7 +17,7 @@ export default defineComponent({
     const appStore = useAppStore();
     const localMusics = computed(() => appStore.localMusics);
 
-    const { player, playingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } =
+    const { player, sessionPlayingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } =
       initActionFunction(localMusics);
 
     /**
@@ -103,8 +103,8 @@ export default defineComponent({
                       >
                         <CommonIconVue icon="icon-shanchu" />
                       </ElLink>
-                      {playingMusic.value?.id === it.id ? (
-                        playingMusic.value.status ? (
+                      {sessionPlayingMusic.value?.id === it.id ? (
+                        sessionPlayingMusic.value.status ? (
                           <div class={rootClass['list-item-playing']} onClick={() => player?.pause()}>
                             <img src={iconPlaying} />
                           </div>
