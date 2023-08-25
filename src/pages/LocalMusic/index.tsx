@@ -2,12 +2,13 @@ import { defineComponent, computed } from 'vue';
 import rootClass from '../index.module.scss';
 import { ElButton, ElEmpty, ElLink } from 'element-plus';
 import CommonIconVue from '@/components/CommonIcon.vue';
-import { musicsElectronStoreKey, type LocalMusicItem } from '@/constant';
+import { musicsElectronStoreKey } from '@/constant';
 import { useAppStore } from '@/stores/app';
 import iconPlaying from '@/assets/images/player_state_playing.gif';
 import iconEmpty from '@/assets/images/music-empty.svg';
 import elConfirm from '@/hooks/el-confirm';
 import { initActionFunction } from '../page-hook';
+import type { LocalMusicItem } from '@/constant-node';
 
 /**
  * 首页
@@ -104,7 +105,7 @@ export default defineComponent({
                         <CommonIconVue icon="icon-shanchu" />
                       </ElLink>
                       {sessionPlayingMusic.value?.id === it.id ? (
-                        sessionPlayingMusic.value.status ? (
+                        sessionPlayingMusic.value?.status ? (
                           <div class={rootClass['list-item-playing']} onClick={() => player?.pause()}>
                             <img src={iconPlaying} />
                           </div>

@@ -4,7 +4,7 @@ import { useRouterBackRender } from '../page-hook';
 import vSizeOb, { type SizeObParams } from '@/directives/size-ob-directive';
 import { useAnimation1 } from './useAnimation1';
 import { useAnimation2 } from './useAnimation2';
-import { playerSymbol, type PlayerType } from '@/constant';
+import { playerPromiseSymbol, type PromisePlayerType } from '@/constant';
 
 export type CanvasDataType = {
   ctx: CanvasRenderingContext2D | null;
@@ -14,7 +14,7 @@ export type CanvasDataType = {
 
 export default defineComponent({
   setup() {
-    const { routerBackRender } = useRouterBackRender();
+    const { routerBackRender } = useRouterBackRender(-1, true);
 
     const canvasData: CanvasDataType = {
       ctx: null,
@@ -22,7 +22,7 @@ export default defineComponent({
       canvasHeight: 0,
     };
     const canvasRef = ref<HTMLCanvasElement | undefined>();
-    const player = inject<PlayerType>(playerSymbol);
+    const playerPromise = inject<PromisePlayerType>(playerPromiseSymbol);
 
     const { initCanvas1, updateDraw1, stopDraw1 } = useAnimation1(canvasData);
     const { initCanvas2, updateDraw2, stopDraw2 } = useAnimation2(canvasData);
@@ -35,11 +35,13 @@ export default defineComponent({
 
     const curAnimation = computed(() => animationList[curAnimationIndex.value]);
 
-    watch(curAnimation, (val1, val2) => {
+    watch(curAnimation, async (val1, val2) => {
       if (!val1) return;
       if (val2) val2.stop();
+      if (!playerPromise) return;
       val1.init();
-      val1.update();
+      const player = await playerPromise;
+      val1.update(player);
     });
 
     function handleSizeChange({ width, height }: SizeObParams) {
@@ -59,9 +61,10 @@ export default defineComponent({
 
     onMounted(async () => {
       await nextTick();
-      if (!canvasRef.value || !player) return;
+      if (!canvasRef.value || !playerPromise) return;
+      const player = await playerPromise;
       canvasData.ctx = canvasRef.value.getContext('2d');
-      curAnimation.value.update();
+      curAnimation.value.update(player);
     });
 
     return function () {

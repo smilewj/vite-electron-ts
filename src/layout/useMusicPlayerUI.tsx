@@ -53,7 +53,7 @@ export function useMusicPlayerUI() {
       <div class={indexScss['player-ui']}>
         <div class={indexScss['player-ui-left']}>
           <div class={indexScss['player-ui-left-image']}>
-            {cm?.cover ? <img src={cm.cover} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
+            {cm?.info?.cover ? <img src={cm.info.cover} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
             <div class={indexScss['player-ui-left-image-action']} onClick={() => router.push({ name: 'playing' })}>
               <CommonIconVue icon="icon-xiangshang" class="font26" />
             </div>
@@ -88,6 +88,11 @@ export function useMusicPlayerUI() {
           </ElLink>
         </div>
         <div class={indexScss['player-ui-right']}>
+          {cm && (
+            <ElLink type="default" underline={false} class="mt2" onClick={() => router.push('./lyric')}>
+              <CommonIconVue icon="icon-geci" class="font26" />
+            </ElLink>
+          )}
           <div class={indexScss['player-ui-right-time']}>
             <span>{currentTime.value}</span>
             <span class="ml2 mr2">/</span>

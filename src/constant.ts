@@ -1,4 +1,5 @@
 import type { Ref } from 'vue';
+import type { LocalMusicItem } from './constant-node';
 
 /**
  * 存储在本地文件中的音乐信息的key
@@ -19,24 +20,6 @@ export const playingMusicSessionKey = 'SESSION_MUSIC_PLAYING';
  * 存储在本地文件中的喜欢的音乐信息的key
  */
 export const loveElectronStoreKey = 'MUSICS_LOVE';
-
-/**
- * 存储在本地文件中的音乐信息
- */
-export type LocalMusicItem = {
-  /** id */
-  id: string;
-  /** 名称 */
-  name: string;
-  /** 名称带后缀 */
-  fullName: string;
-  /** 文件路径 */
-  path: string;
-  /** 封面 */
-  cover?: string;
-  /** 总时长 */
-  duration?: number;
-};
 
 /**
  * 播放中的音乐
@@ -60,6 +43,7 @@ export type SessionPlayingMusicType = LocalMusicItem & {
  * 音乐播放器 key
  */
 export const playerSymbol = Symbol('player');
+export const playerPromiseSymbol = Symbol('player-promise');
 
 /**
  * 音乐播放器
@@ -103,6 +87,8 @@ export type PlayerType = {
   initPlaying: () => Promise<void>;
 };
 
+export type PromisePlayerType = Promise<PlayerType>;
+
 /**
  * audio 分线器
  */
@@ -110,4 +96,12 @@ export type AudioCtxType = {
   ctx: AudioContext | undefined; // 音频分析处理器节点
   analyser: AnalyserNode | undefined; // 音频分析处理器节点
   buffer: Uint8Array | undefined; // 音频分析数据
+};
+
+/**
+ * 歌词
+ */
+export type LyricItemType = {
+  time: number;
+  text: string;
 };

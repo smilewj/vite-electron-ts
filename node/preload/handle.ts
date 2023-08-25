@@ -4,7 +4,8 @@ import store from '../store';
 import path from 'path';
 import md5 from 'js-md5';
 import fs from 'fs';
-import { unitGetAudioDuration, unitGetMusicCover } from '../unit';
+import { unitGetAudioDuration, unitGetMusicInfo } from '../unit';
+import { handleReadLyricSync } from './lyric';
 
 export default function initIpcMainHandle() {
   ipcMain.handle(CHANNEL_KEYS.OPEN_MUSIC_FILES, handleSelectMusicFiles);
@@ -12,6 +13,7 @@ export default function initIpcMainHandle() {
   ipcMain.handle(CHANNEL_KEYS.STORE_GET, handleStoreGet);
   ipcMain.handle(CHANNEL_KEYS.STORE_DELETE, handleStoreDelete);
   ipcMain.handle(CHANNEL_KEYS.READ_FILE_SYNC, handleReadFileSync);
+  ipcMain.handle(CHANNEL_KEYS.READ_LYRIC_SYNC, handleReadLyricSync);
 }
 
 /**
@@ -27,14 +29,14 @@ async function handleSelectMusicFiles() {
   const { canceled, filePaths } = await dialog.showOpenDialog(options);
   if (!canceled) {
     const listPromise = filePaths.map(async (filePath) => {
-      const cover = unitGetMusicCover(filePath);
+      const info = unitGetMusicInfo(filePath);
       const duration = await unitGetAudioDuration(filePath);
       return {
         name: path.basename(filePath, path.extname(filePath)),
         fullName: path.basename(filePath),
         path: filePath,
         id: md5(filePath),
-        cover,
+        info,
         duration,
       };
     });
@@ -77,6 +79,12 @@ function handleStoreDelete(event: IpcMainInvokeEvent, key: string) {
   return store.delete(key);
 }
 
+/**
+ * 读取文件
+ * @param event
+ * @param path
+ * @returns
+ */
 function handleReadFileSync(event: IpcMainInvokeEvent, path: string) {
   if (!path || typeof path !== 'string') return;
   try {

@@ -1,10 +1,4 @@
-import type {
-  AudioCtxType,
-  PlayerType,
-  PlayingMusicType,
-  PromisePlayerType,
-  SessionPlayingMusicType,
-} from '@/constant';
+import type { AudioCtxType, PlayerType, PlayingMusicType, SessionPlayingMusicType } from '@/constant';
 import { useAppStore } from '@/stores/app';
 import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
 import debMessage from './deb-message';
@@ -14,15 +8,15 @@ import type { LocalMusicItem } from '@/constant-node';
 /**
  * 初始化歌曲数据
  */
-export function initMusicData(playerPromise: PromisePlayerType) {
+export function initMusicData(getPlayer: () => PlayerType) {
   const appStore = useAppStore();
 
   function init() {
     appStore.getLocalMusics();
     appStore.getLoveMusics();
-    appStore.getPlayingMusic().then(async (playingMusic) => {
-      if (!playingMusic) return;
-      const player = await playerPromise;
+    appStore.getPlayingMusic().then((playingMusic) => {
+      const player = getPlayer();
+      if (!player || !playingMusic) return;
       player.initPlaying();
     });
   }
@@ -34,29 +28,74 @@ export function initMusicData(playerPromise: PromisePlayerType) {
  * 渲染播放
  * @returns
  */
-export function renderMusicAudio() {
-  let playerResolve: (value: PlayerType | PromiseLike<PlayerType>) => void;
+export function renderMusicAudio(getPlayer: () => PlayerType) {
   const audioRef = ref<HTMLMediaElement | undefined>();
+  const appStore = useAppStore();
   const audioCtx: AudioCtxType = {
     ctx: undefined,
     analyser: undefined,
     buffer: undefined,
   };
 
-  const { handleTimeupdate, handleVolumechange, handleEnded, handlePause, handlePlay } =
-    createMusicEventListener(audioRef);
+  const playingMusic = computed(() => appStore.playingMusic);
+  const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
 
-  const controlsFunHandle = createMusicControlsPlayer(audioRef);
+  /**
+   * 更新音乐播放的进度
+   */
+  function handleTimeupdate() {
+    const pm: SessionPlayingMusicType = {
+      ...sessionPlayingMusic.value!,
+      current: audioRef.value!.currentTime,
+    };
+    appStore.setSessionPlayingMusic(pm);
+  }
 
-  const player: PlayerType = {
-    ...controlsFunHandle,
-    audioCtx,
-    elRef: audioRef,
-  };
+  /**
+   * 更新音乐的播放音量
+   */
+  function handleVolumechange() {
+    const pm: PlayingMusicType = {
+      ...playingMusic.value!,
+      volume: audioRef.value!.volume,
+    };
+    appStore.setPlayingMusic(pm);
+  }
 
-  const playerPromise = new Promise<PlayerType>((resolve) => {
-    playerResolve = resolve;
-  });
+  /**
+   * 播放结束回调
+   */
+  function handleEnded() {
+    const player = getPlayer();
+    player.next();
+  }
+
+  /**
+   * 暂停回调
+   */
+  function handlePause() {
+    const pmSession: SessionPlayingMusicType = {
+      ...sessionPlayingMusic.value!,
+      status: false,
+    };
+    appStore.setSessionPlayingMusic(pmSession);
+  }
+
+  /**
+   * 播放回调
+   */
+  function handlePlay() {
+    const pm: PlayingMusicType = {
+      ...playingMusic.value!,
+    };
+    const pmSession: SessionPlayingMusicType = {
+      ...sessionPlayingMusic.value!,
+      status: true,
+    };
+    appStore.setPlayingMusic(pm);
+    appStore.setSessionPlayingMusic(pmSession);
+    initAutoAnalyser();
+  }
 
   /**
    * 初始化音频分析处理器节点
@@ -74,41 +113,28 @@ export function renderMusicAudio() {
     audioCtx.analyser.connect(audioCtx.ctx.destination);
   }
 
-  onMounted(async () => {
-    await nextTick();
-    initAutoAnalyser();
-    controlsFunHandle.initPlaying();
-    if (playerResolve) {
-      playerResolve(player);
-    }
-  });
-
   function render() {
     return (
       <audio
         style="display: none"
         ref={audioRef}
-        onTimeupdate={() => handleTimeupdate()}
-        onEnded={() =>
-          handleEnded(() => {
-            controlsFunHandle.next();
-          })
-        }
-        onPause={() => handlePause()}
-        onPlay={() => handlePlay()}
-        onVolumechange={() => handleVolumechange()}
+        onTimeupdate={handleTimeupdate}
+        onEnded={handleEnded}
+        onPause={handlePause}
+        onPlay={handlePlay}
+        onVolumechange={handleVolumechange}
       />
     );
   }
 
-  return { render, playerPromise, player };
+  return { render, audioRef, audioCtx };
 }
 
 /**
  * 生成播放器控制方法
  * @param audioRef
  */
-function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) {
+export function createMusicPlayer(audioRef: Ref<HTMLMediaElement | undefined>, audioCtx: AudioCtxType) {
   const appStore = useAppStore();
 
   const playingMusic = computed(() => appStore.playingMusic);
@@ -266,7 +292,10 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
     appStore.setSessionPlayingMusic();
   }
 
-  return {
+  onMounted(loadMusicDataPlay);
+
+  const player: PlayerType = {
+    audioCtx,
     start: startPlayMusic,
     pause: pauseMusic,
     play: playMusic,
@@ -274,96 +303,11 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
     volume: setVolume,
     next: playNextMusic,
     prev: playPrevMusic,
+    elRef: audioRef,
     initPlaying: loadMusicDataPlay,
   };
-}
 
-/**
- * 生成播放器事件回调函数
- * @param audioRef
- * @returns
- */
-function createMusicEventListener(audioRef: Ref<HTMLMediaElement | undefined>) {
-  const appStore = useAppStore();
-  const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
-  const playingMusic = computed(() => appStore.playingMusic);
-
-  /**
-   * 更新音乐播放的进度
-   */
-  function handleTimeupdate(callback?: Function) {
-    const pm: SessionPlayingMusicType = {
-      ...sessionPlayingMusic.value!,
-      current: audioRef.value!.currentTime,
-    };
-    appStore.setSessionPlayingMusic(pm);
-    if (callback && typeof callback === 'function') {
-      callback();
-    }
-  }
-
-  /**
-   * 更新音乐的播放音量
-   */
-  function handleVolumechange(callback?: Function) {
-    const pm: PlayingMusicType = {
-      ...playingMusic.value!,
-      volume: audioRef.value!.volume,
-    };
-    appStore.setPlayingMusic(pm);
-    if (callback && typeof callback === 'function') {
-      callback();
-    }
-  }
-
-  /**
-   * 播放结束回调
-   */
-  function handleEnded(callback?: Function) {
-    if (callback && typeof callback === 'function') {
-      callback();
-    }
-  }
-
-  /**
-   * 暂停回调
-   */
-  function handlePause(callback?: Function) {
-    const pmSession: SessionPlayingMusicType = {
-      ...sessionPlayingMusic.value!,
-      status: false,
-    };
-    appStore.setSessionPlayingMusic(pmSession);
-    if (callback && typeof callback === 'function') {
-      callback();
-    }
-  }
-
-  /**
-   * 播放回调
-   */
-  function handlePlay(callback?: Function) {
-    const pm: PlayingMusicType = {
-      ...playingMusic.value!,
-    };
-    const pmSession: SessionPlayingMusicType = {
-      ...sessionPlayingMusic.value!,
-      status: true,
-    };
-    appStore.setPlayingMusic(pm);
-    appStore.setSessionPlayingMusic(pmSession);
-    if (callback && typeof callback === 'function') {
-      callback();
-    }
-  }
-
-  return {
-    handleTimeupdate,
-    handleVolumechange,
-    handleEnded,
-    handlePause,
-    handlePlay,
-  };
+  return player;
 }
 
 /**

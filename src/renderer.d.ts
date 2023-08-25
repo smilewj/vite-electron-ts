@@ -6,6 +6,7 @@ export interface IElectronAPI {
   storeGet: <T>(key: string) => Promise<T>;
   storeDelete: (key: string) => Promise<void>;
   readFileSync: (path: string) => Promise<string | undefined>;
+  readLyricSync: (music: LocalMusicItem) => Promise<string | undefined>;
 }
 
 declare global {

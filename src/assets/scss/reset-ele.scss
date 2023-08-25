@@ -19,6 +19,8 @@ $colorDanger: #ff4d4f;
 
   --el-color-error: #{$colorDanger} !important;
   --el-color-error-dark-2: #{darken($colorDanger, 5%)} !important;
+
+  --el-mask-color: rgba(0, 0, 0, 0);
 }
 
 // 提示框样式重写
@@ -192,4 +194,8 @@ $colorDanger: #ff4d4f;
     --el-slider-button-size: 12px;
     --el-slider-height: 5px;
   }
+}
+
+.el-loading-mask {
+  backdrop-filter: blur(2px);
 }

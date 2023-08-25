@@ -3,18 +3,17 @@ import zhCn from '@/locale/zh-cn';
 // import en from '@/locale/en';
 import { ElConfigProvider } from 'element-plus';
 import { RouterView } from 'vue-router';
-import { playerSymbol, type PlayerType } from './constant';
-import { createMusicPlayer, initMusicData, renderMusicAudio } from './hooks/music-player-hook';
+import { playerPromiseSymbol, playerSymbol, type PlayerType, type PromisePlayerType } from './constant';
+import { initMusicData, renderMusicAudio } from './hooks/music-player-hook';
 
 export default defineComponent({
   setup() {
-    initMusicData(() => player);
+    const { render: playerRender, playerPromise, player } = renderMusicAudio();
 
-    const { render: playerRender, audioRef, audioCtx } = renderMusicAudio(() => player);
-
-    const player = createMusicPlayer(audioRef, audioCtx);
+    initMusicData(playerPromise);
 
     provide<PlayerType>(playerSymbol, player);
+    provide<PromisePlayerType>(playerPromiseSymbol, playerPromise);
 
     return function () {
       return (

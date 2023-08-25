@@ -1,6 +1,6 @@
 import { inject, onMounted, onUnmounted } from 'vue';
 import type { CanvasDataType } from '.';
-import { playerSymbol, type PlayerType } from '@/constant';
+import { playerPromiseSymbol, type PlayerType, type PromisePlayerType } from '@/constant';
 import { getGradientColor } from '@/utils/func';
 
 /**
@@ -18,22 +18,22 @@ export function useAnimation2(canvasData: CanvasDataType) {
   let lineWidth: number;
   let maxLineHeight: number;
 
-  const player = inject<PlayerType>(playerSymbol);
+  const playerPromise = inject<PromisePlayerType>(playerPromiseSymbol);
 
   function initCanvas() {
     if (!canvasData.ctx) return;
     canvasData.ctx.restore();
     canvasData.ctx.save();
-    left = Math.round(canvasData.canvasWidth / 10);
-    bottom = Math.round(canvasData.canvasHeight / 10);
+    left = 0;
+    bottom = 0;
     topPoint = [-left, -canvasData.canvasHeight + bottom];
     lineWidth = canvasData.canvasWidth - left * 2;
     maxLineHeight = canvasData.canvasHeight - bottom;
     canvasData.ctx.translate(left, canvasData.canvasHeight - bottom);
   }
 
-  function initAutoAnalyser() {
-    if (!player?.audioCtx.buffer) return;
+  async function initAutoAnalyser(player: PlayerType) {
+    if (!player.audioCtx.buffer) return;
     offset = Math.floor((player.audioCtx.buffer.length * 2) / 3);
     colors = new Array(offset);
     for (let i = 0; i < offset; i++) {
@@ -69,8 +69,8 @@ export function useAnimation2(canvasData: CanvasDataType) {
     }
   }
 
-  function updateDraw() {
-    animationFrameId = requestAnimationFrame(updateDraw);
+  function updateDraw(player: PlayerType) {
+    animationFrameId = requestAnimationFrame(() => updateDraw(player));
     if (!player?.audioCtx.analyser || !player?.audioCtx.buffer) {
       return;
     }
@@ -91,7 +91,11 @@ export function useAnimation2(canvasData: CanvasDataType) {
     }
   }
 
-  onMounted(initAutoAnalyser);
+  onMounted(async () => {
+    if (!playerPromise) return;
+    const player = await playerPromise;
+    initAutoAnalyser(player);
+  });
 
   onUnmounted(stopDraw);
 

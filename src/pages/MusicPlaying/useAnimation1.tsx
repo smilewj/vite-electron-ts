@@ -1,6 +1,6 @@
 import { inject, onMounted, onUnmounted } from 'vue';
 import type { CanvasDataType } from '.';
-import { playerSymbol, type PlayerType } from '@/constant';
+import { playerPromiseSymbol, type PlayerType, type PromisePlayerType } from '@/constant';
 import { getGradientColor } from '@/utils/func';
 
 /**
@@ -15,7 +15,7 @@ export function useAnimation1(canvasData: CanvasDataType) {
   let offset: number;
   let allColors: Array<string>;
 
-  const player = inject<PlayerType>(playerSymbol);
+  const playerPromise = inject<PromisePlayerType>(playerPromiseSymbol);
 
   function initCanvas() {
     if (!canvasData.ctx) return;
@@ -27,8 +27,8 @@ export function useAnimation1(canvasData: CanvasDataType) {
     maxLineHeight = radius * 10;
   }
 
-  function initAutoAnalyser() {
-    if (!player?.audioCtx.buffer) return;
+  function initAutoAnalyser(player: PlayerType) {
+    if (!player.audioCtx.buffer) return;
     offset = Math.floor((player.audioCtx.buffer.length * 2) / 3);
     const colors = new Array(offset);
     for (let i = 0; i < offset; i++) {
@@ -74,8 +74,8 @@ export function useAnimation1(canvasData: CanvasDataType) {
     }
   }
 
-  function updateDraw() {
-    animationFrameId = requestAnimationFrame(updateDraw);
+  function updateDraw(player: PlayerType) {
+    animationFrameId = requestAnimationFrame(() => updateDraw(player));
     if (!player?.audioCtx.analyser || !player?.audioCtx.buffer) {
       return;
     }
@@ -93,7 +93,11 @@ export function useAnimation1(canvasData: CanvasDataType) {
     }
   }
 
-  onMounted(initAutoAnalyser);
+  onMounted(async () => {
+    if (!playerPromise) return;
+    const player = await playerPromise;
+    initAutoAnalyser(player);
+  });
 
   onUnmounted(stopDraw);
 

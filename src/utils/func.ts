@@ -1,3 +1,4 @@
+import type { LyricItemType } from '@/constant';
 import debMessage from '@/hooks/deb-message';
 import copy from 'copy-to-clipboard';
 
@@ -59,4 +60,38 @@ export function getGradientColor(
 
   // 返回渐变颜色，这里用RGB表示
   return `rgb(${r}, ${g}, ${b})`;
+}
+
+/**
+ * 格式化歌词数据
+ * @param data
+ * @returns
+ */
+export function parseLyrics(data: string) {
+  const lines = data.split('\n');
+  const parsedLyrics = [];
+
+  for (const line of lines) {
+    const match = line.match(/\[(\d+:\d+\.\d+)\](.+)/);
+    if (match) {
+      const time = parseTime(match[1]);
+      const text = match[2];
+      parsedLyrics.push({ time, text });
+    }
+  }
+  return parsedLyrics;
+}
+
+function parseTime(timeStr: string) {
+  const [minutes, seconds] = timeStr.split(':').map(parseFloat);
+  return minutes * 60 + seconds;
+}
+
+export function findCurrentLyricIndex(time: number, lyrics: LyricItemType[]) {
+  for (let i = lyrics.length - 1; i >= 0; i--) {
+    if (time >= lyrics[i].time) {
+      return i;
+    }
+  }
+  return null;
 }

@@ -4,6 +4,7 @@ import musicIcon from '@/assets/images/icon.webp';
 import { useMenuRender } from './useMenuRender';
 import { useContentRender } from './useContentRender';
 import { useMusicPlayerUI } from './useMusicPlayerUI';
+import { initAnimationBg } from '@/views/AnimationBg';
 
 export default defineComponent({
   props: {},
@@ -11,10 +12,12 @@ export default defineComponent({
     const { renderMenu } = useMenuRender();
     const { renderContent } = useContentRender();
     const { renderPlayerUI } = useMusicPlayerUI();
+    const { abRender } = initAnimationBg();
 
     return function () {
       return (
         <div class={indexScss.root}>
+          {abRender()}
           <div class={indexScss['root-left']}>
             <div class={indexScss['root-left-icon']}>
               <img src={musicIcon} class={indexScss['root-left-icon-image']} />

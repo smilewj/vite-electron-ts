@@ -40,7 +40,4 @@ export default defineConfig({
     host: true,
     port: 20000,
   },
-  optimizeDeps: {
-    exclude: ['ffmpeg-static'],
-  },
 });

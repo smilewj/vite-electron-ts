@@ -6,7 +6,8 @@
     "cypress.config.*",
     "playwright.config.*",
     "plugins/**/*.ts",
-    "node/**/*.ts"
+    "node/**/*.ts",
+    "src/constant-node.ts"
   ],
   "compilerOptions": {
     "ignoreDeprecations": "5.0",

@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import AppRouter from '@/views/AppRouter';
 import LocalMusic from '@/pages/LocalMusic';
 import LoveMusic from '@/pages/LoveMusic';
+import MusicLyric from '@/pages/MusicLyric';
 
 const appList: RouteRecordRaw[] = [
   {
@@ -12,8 +13,20 @@ const appList: RouteRecordRaw[] = [
     children: [
       {
         path: 'local',
-        component: LocalMusic,
+        component: AppRouter,
         name: '本地歌曲',
+        redirect: { name: '本地歌曲-列表' },
+        children: [
+          {
+            path: 'list',
+            component: LocalMusic,
+            name: '本地歌曲-列表',
+          },
+          {
+            path: 'lyric',
+            component: MusicLyric,
+          },
+        ],
       },
       {
         path: 'love',

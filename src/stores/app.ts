@@ -1,25 +1,25 @@
 import {
   playingMusicElectronStoreKey,
-  type LocalMusicItem,
   type PlayingMusicType,
   musicsElectronStoreKey,
   loveElectronStoreKey,
   type SessionPlayingMusicType,
   playingMusicSessionKey,
 } from '@/constant';
+import type { LocalMusicItem } from '@/constant-node';
 import storage from '@/utils/storage';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 
 const localSessionPlayingMusic = storage.getSession<SessionPlayingMusicType>(playingMusicSessionKey);
 
 export const useAppStore = defineStore('app', () => {
   /** 音乐列表 */
-  const localMusics = ref<LocalMusicItem[]>([]);
+  const localMusics = shallowRef<LocalMusicItem[]>([]);
   /** 正在播放的音乐 */
-  const playingMusic = ref<PlayingMusicType | undefined>();
+  const playingMusic = shallowRef<PlayingMusicType | undefined>();
   /** session 正在播放的音乐 */
-  const sessionPlayingMusic = ref<SessionPlayingMusicType | undefined>(localSessionPlayingMusic);
+  const sessionPlayingMusic = shallowRef<SessionPlayingMusicType | undefined>(localSessionPlayingMusic);
   /** 本地我喜欢的音乐ID */
   const loveMusicIds = ref<string[]>([]);
   /** 我喜欢的音乐列表 */

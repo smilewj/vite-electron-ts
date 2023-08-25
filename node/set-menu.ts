@@ -1,5 +1,5 @@
 import { Menu, MenuItem, shell, type MenuItemConstructorOptions, app } from 'electron';
-import isDev from 'electron-is-dev';
+// import isDev from 'electron-is-dev';
 
 const isMac = process.platform === 'darwin';
 
@@ -79,31 +79,31 @@ const menuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
   },
 ];
 
-if (isDev) {
-  const devMenuItems: MenuItemConstructorOptions[] = [
-    {
-      label: '开发者工具',
-      accelerator: (() => {
-        if (isMac) {
-          return 'Alt+Command+I';
-        } else {
-          return 'F12';
-        }
-      })(),
-      role: 'toggleDevTools',
+// if (isDev) {
+const devMenuItems: MenuItemConstructorOptions[] = [
+  {
+    label: '开发者工具',
+    accelerator: (() => {
+      if (isMac) {
+        return 'Alt+Command+I';
+      } else {
+        return 'F12';
+      }
+    })(),
+    role: 'toggleDevTools',
+  },
+  {
+    label: '刷新页面',
+    accelerator: 'CmdOrCtrl+R',
+    click: (item, focusedWindow) => {
+      if (focusedWindow) {
+        focusedWindow.reload();
+      }
     },
-    {
-      label: '刷新页面',
-      accelerator: 'CmdOrCtrl+R',
-      click: (item, focusedWindow) => {
-        if (focusedWindow) {
-          focusedWindow.reload();
-        }
-      },
-    },
-  ];
-  (menuTemplate[1].submenu as MenuItemConstructorOptions[]).push(...devMenuItems);
-}
+  },
+];
+(menuTemplate[1].submenu as MenuItemConstructorOptions[]).push(...devMenuItems);
+// }
 
 /**
  * 设置系统菜单

@@ -3,7 +3,7 @@ import merge from 'lodash/merge';
 import path from 'path';
 
 const defaultConfig: BrowserWindowConstructorOptions = {
-  width: 1200,
+  width: 1000,
   height: 750,
   webPreferences: {
     nodeIntegration: true, // 集成Node

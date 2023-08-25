@@ -1,6 +1,6 @@
 import ffmpegPath from 'ffmpeg-static';
 import childProcess from 'child_process';
-import ID3 from 'node-id3';
+import ID3, { type Tags } from 'node-id3';
 import path from 'path';
 import isDev from 'electron-is-dev';
 
@@ -42,11 +42,31 @@ export function unitGetAudioDuration(filePath: string): Promise<number> {
  * @param tags
  * @returns
  */
-export function unitGetMusicCover(filePath: string) {
+export function unitGetMusicInfo(filePath: string) {
   try {
     const tags = ID3.read(filePath);
+    const { artist, title } = tags;
+    const cover = unitGetMusicCover(tags);
+    return {
+      artist,
+      title,
+      cover,
+    };
+  } catch {
+    return {
+      artist: undefined,
+      title: undefined,
+      cover: undefined,
+    };
+  }
+}
+
+function unitGetMusicCover(tags: Tags) {
+  try {
     const { image } = tags;
-    if (!image) return;
+    if (!image) {
+      return;
+    }
     if (typeof image === 'string') {
       return image;
     }

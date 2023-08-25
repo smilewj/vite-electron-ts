@@ -10,4 +10,6 @@ export enum CHANNEL_KEYS {
   STORE_DELETE = 'store:delete',
   /** 读取文件 */
   READ_FILE_SYNC = 'node:readFileSync',
+  /** 读取歌词 */
+  READ_LYRIC_SYNC = 'node:readLyricSync',
 }

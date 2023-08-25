@@ -1,10 +1,12 @@
-import { playerSymbol, type LocalMusicItem, type PlayerType } from '@/constant';
+import { playerSymbol, type LyricItemType, type PlayerType, type PlayingMusicType } from '@/constant';
 import { useAppStore } from '@/stores/app';
-import { computed, inject, type Ref } from 'vue';
+import { computed, inject, ref, watchEffect, type Ref } from 'vue';
 import rootClass from './index.module.scss';
 import { ElLink } from 'element-plus';
 import CommonIconVue from '@/components/CommonIcon.vue';
 import { useRouter } from 'vue-router';
+import type { LocalMusicItem } from '@/constant-node';
+import { parseLyrics } from '@/utils/func';
 
 /**
  * 按钮方法
@@ -68,12 +70,12 @@ export function initActionFunction(musicsRef: Ref<LocalMusicItem[]>) {
  * @param delta
  * @returns
  */
-export function useRouterBackRender(delta: number = -1) {
+export function useRouterBackRender(delta: number = -1, isBlack = false) {
   const router = useRouter();
 
   function render() {
     return (
-      <div class={rootClass['router-back']}>
+      <div class={[rootClass['router-back'], isBlack ? rootClass['router-back-black'] : '']}>
         <ElLink underline={false} onClick={() => router.go(delta)} type="default">
           <CommonIconVue icon="icon-xiangxia" class="font24" />
         </ElLink>
@@ -83,5 +85,37 @@ export function useRouterBackRender(delta: number = -1) {
 
   return {
     routerBackRender: render,
+  };
+}
+
+/**
+ * 获取歌词列表
+ * @param musicRef
+ * @returns
+ */
+export function initLyric(musicRef: Ref<LocalMusicItem | PlayingMusicType | undefined>) {
+  const [lyrics, loading] = [ref<LyricItemType[]>([]), ref(false)];
+  async function loadData() {
+    try {
+      loading.value = true;
+      if (!musicRef.value) {
+        throw '暂无播放的歌曲';
+      }
+      const lyricStr = await window.electronAPI.readLyricSync(musicRef.value);
+      if (lyricStr) {
+        lyrics.value = parseLyrics(lyricStr);
+      }
+    } catch {
+      lyrics.value = [];
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  watchEffect(loadData);
+
+  return {
+    lyrics,
+    loading,
   };
 }

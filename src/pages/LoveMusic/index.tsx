@@ -44,7 +44,7 @@ export default defineComponent({
                         <CommonIconVue icon="icon-xihuan1" class="font16" />
                       </ElLink>
                       {sessionPlayingMusic.value?.id === it.id ? (
-                        sessionPlayingMusic.value.status ? (
+                        sessionPlayingMusic.value?.status ? (
                           <div class={rootClass['list-item-playing']} onClick={() => player?.pause()}>
                             <img src={iconPlaying} />
                           </div>
