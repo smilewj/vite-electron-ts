@@ -15,12 +15,12 @@
     }
   }
   .action {
-    margin-top: 20px;
+    margin-top: 15px;
     display: flex;
     align-items: center;
   }
   .list {
-    margin-top: 20px;
+    margin-top: 15px;
     flex: 1;
     overflow: auto;
     &-item {
@@ -29,7 +29,7 @@
       align-items: center;
       justify-content: space-between;
       &:nth-of-type(2n + 1) {
-        background-color: #f5f4f4;
+        background-color: #f5f4f4a0;
       }
       &:hover {
         background-color: #008c8c12;
