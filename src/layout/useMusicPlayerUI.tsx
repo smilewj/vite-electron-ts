@@ -1,14 +1,25 @@
 import { useAppStore } from '@/stores/app';
 import indexScss from './index.module.scss';
-import { computed, inject } from 'vue';
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 import CommonIconVue from '@/components/CommonIcon.vue';
 import { ElLink, ElPopover, ElSlider } from 'element-plus';
-import { playerSymbol, type PlayerType } from '@/constant';
+import {
+  playerPromiseSymbol,
+  playerSymbol,
+  type LyricItemType,
+  type PlayerType,
+  type PromisePlayerType,
+} from '@/constant';
 import { useRouter } from 'vue-router';
+import { findCurrentLyric } from '@/utils/func';
+import { initLyric } from '@/pages/page-hook';
 
 export function useMusicPlayerUI() {
   const player = inject<PlayerType>(playerSymbol);
+  const playerPromise = inject<PromisePlayerType>(playerPromiseSymbol);
   const router = useRouter();
+
+  const currentLyric = ref<LyricItemType | undefined>();
 
   const appStore = useAppStore();
   const playingMusic = computed(() => appStore.playingMusic);
@@ -47,6 +58,29 @@ export function useMusicPlayerUI() {
     appStore.setLoveMusicId(playingMusic.value.id);
   }
 
+  const { lyrics } = initLyric(playingMusic);
+  function handleTimeupdate() {
+    const currentTime = player?.elRef.value?.currentTime || 0;
+    const ci = findCurrentLyric(currentTime, lyrics.value);
+    currentLyric.value = ci?.lyric;
+  }
+
+  onMounted(async () => {
+    if (!playerPromise) return;
+    const player = await playerPromise;
+    if (player.elRef.value) {
+      player.elRef.value.addEventListener('timeupdate', handleTimeupdate);
+    }
+  });
+
+  onUnmounted(async () => {
+    if (!playerPromise) return;
+    const player = await playerPromise;
+    if (player.elRef.value) {
+      player.elRef.value.removeEventListener('timeupdate', handleTimeupdate);
+    }
+  });
+
   function render() {
     const cm = playingMusic.value;
     return (
@@ -60,6 +94,7 @@ export function useMusicPlayerUI() {
           </div>
           <div class={indexScss['player-ui-left-info']}>
             <div class={indexScss['player-ui-left-info-name']}>{cm?.name}</div>
+            <div class={indexScss['player-ui-left-info-lyric']}>{currentLyric.value?.text}</div>
           </div>
         </div>
         <div class={indexScss['player-ui-center']}>

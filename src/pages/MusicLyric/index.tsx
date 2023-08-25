@@ -3,8 +3,8 @@ import rootClass from '../index.module.scss';
 import { initLyric, useRouterBackRender } from '../page-hook';
 import { useAppStore } from '@/stores/app';
 import { vLoading } from 'element-plus';
-import { type PlayerType, playerSymbol } from '@/constant';
-import { findCurrentLyricIndex } from '@/utils/func';
+import { type PlayerType, playerSymbol, playerPromiseSymbol, type PromisePlayerType } from '@/constant';
+import { findCurrentLyric } from '@/utils/func';
 
 export default defineComponent({
   props: {},
@@ -15,23 +15,28 @@ export default defineComponent({
     const playingMusic = computed(() => appStore.playingMusic);
     const { lyrics, loading } = initLyric(playingMusic);
     const player = inject<PlayerType>(playerSymbol);
+    const playerPromise = inject<PromisePlayerType>(playerPromiseSymbol);
 
-    const currentIndex = ref<number | null>(0);
+    const currentIndex = ref<number | undefined>(0);
 
     function handleTimeupdate() {
       const currentTime = player?.elRef.value?.currentTime || 0;
-      const ci = findCurrentLyricIndex(currentTime, lyrics.value);
-      currentIndex.value = ci;
+      const ci = findCurrentLyric(currentTime, lyrics.value);
+      currentIndex.value = ci?.index;
     }
 
-    onMounted(() => {
-      if (player?.elRef.value) {
+    onMounted(async () => {
+      if (!playerPromise) return;
+      const player = await playerPromise;
+      if (player.elRef.value) {
         player.elRef.value.addEventListener('timeupdate', handleTimeupdate);
       }
     });
 
-    onUnmounted(() => {
-      if (player?.elRef.value) {
+    onUnmounted(async () => {
+      if (!playerPromise) return;
+      const player = await playerPromise;
+      if (player.elRef.value) {
         player.elRef.value.removeEventListener('timeupdate', handleTimeupdate);
       }
     });

@@ -86,7 +86,14 @@ export default defineComponent({
                 const isLove = appStore.isLoveMusicId(it.id);
                 return (
                   <div class={rootClass['list-item']} onDblclick={() => handlePlayMusic(it)}>
-                    <div class={rootClass['list-item-name']}>{it.fullName}</div>
+                    <div
+                      class={[
+                        rootClass['list-item-name'],
+                        sessionPlayingMusic.value?.id === it.id ? rootClass.active : '',
+                      ]}
+                    >
+                      {it.fullName}
+                    </div>
                     <div class={rootClass['list-item-right']}>
                       <ElLink
                         type="default"

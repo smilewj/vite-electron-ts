@@ -43,6 +43,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         user-select: none;
+        &.active {
+          color: var(--el-color-primary);
+        }
       }
       &-right {
         display: flex;

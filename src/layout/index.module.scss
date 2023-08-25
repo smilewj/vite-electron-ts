@@ -87,7 +87,7 @@
   gap: 20px;
   &-left {
     display: flex;
-    flex: 1;
+    flex: 1.5;
     overflow: hidden;
     &-image {
       position: relative;
@@ -134,6 +134,14 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      &-lyric {
+        margin-top: 2px;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #555555;
+      }
     }
   }
   &-center {
@@ -148,7 +156,7 @@
     }
   }
   &-right {
-    flex: 1;
+    flex: 1.5;
     display: flex;
     align-items: center;
     justify-content: flex-end;

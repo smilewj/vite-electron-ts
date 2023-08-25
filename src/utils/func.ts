@@ -87,10 +87,10 @@ function parseTime(timeStr: string) {
   return minutes * 60 + seconds;
 }
 
-export function findCurrentLyricIndex(time: number, lyrics: LyricItemType[]) {
+export function findCurrentLyric(time: number, lyrics: LyricItemType[]) {
   for (let i = lyrics.length - 1; i >= 0; i--) {
     if (time >= lyrics[i].time) {
-      return i;
+      return { index: i, lyric: lyrics[i] };
     }
   }
   return null;
