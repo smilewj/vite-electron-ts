@@ -22,7 +22,7 @@ app.whenReady().then(() => {
 
   // 打开调试模式
   if (isDev) {
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   }
 
   setMenus();

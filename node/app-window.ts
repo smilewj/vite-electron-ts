@@ -25,7 +25,10 @@ const defaultConfig: BrowserWindowConstructorOptions = {
   //   height: 60,
   // },
   show: false,
-  backgroundColor: '#000',
+  fullscreen: false,
+  fullscreenable: false,
+  transparent: true,
+  titleBarStyle: 'hidden',
 };
 
 export default class AppWindow extends BrowserWindow {

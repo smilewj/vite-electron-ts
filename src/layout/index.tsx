@@ -6,6 +6,7 @@ import { useContentRender } from './useContentRender';
 import { useMusicPlayerUI } from './useMusicPlayerUI';
 import { initAnimationBg } from '@/views/AnimationBg';
 import { initCoverUrl } from '@/pages/page-hook';
+import { useTitlebar } from './useTitlebar';
 
 export default defineComponent({
   props: {},
@@ -14,6 +15,7 @@ export default defineComponent({
     const { renderContent } = useContentRender();
     const { renderPlayerUI, playingMusic } = useMusicPlayerUI();
     const { abRender } = initAnimationBg();
+    const { titlebarRender } = useTitlebar();
 
     const { coverUrl } = initCoverUrl(playingMusic);
 
@@ -30,6 +32,7 @@ export default defineComponent({
     return function () {
       return (
         <div class={indexScss.root} style={rootStyle.value}>
+          {titlebarRender()}
           <div class={indexScss['root-bg']} />
           {abRender()}
           <div class={indexScss['root-left']}>
