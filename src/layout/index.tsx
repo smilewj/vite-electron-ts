@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue';
+import { computed, defineComponent, type CSSProperties } from 'vue';
 import indexScss from './index.module.scss';
 import musicIcon from '@/assets/images/icon.webp';
 import { useMenuRender } from './useMenuRender';
@@ -11,12 +11,25 @@ export default defineComponent({
   setup() {
     const { renderMenu } = useMenuRender();
     const { renderContent } = useContentRender();
-    const { renderPlayerUI } = useMusicPlayerUI();
+    const { renderPlayerUI, playingMusic } = useMusicPlayerUI();
     const { abRender } = initAnimationBg();
+
+    const coverUrl = computed(() => playingMusic.value?.cover);
+
+    const rootStyle = computed(() => {
+      const style: CSSProperties = {};
+      if (coverUrl.value) {
+        style['--page-background'] = `url(${coverUrl.value})`;
+        style['--music-list-item-light-color'] = 'transparent';
+        style['--music-list-item-border-bottom-color'] = 'rgba(245, 244, 244, 0.6)';
+      }
+      return style;
+    });
 
     return function () {
       return (
-        <div class={indexScss.root}>
+        <div class={indexScss.root} style={rootStyle.value}>
+          <div class={indexScss['root-bg']} />
           {abRender()}
           <div class={indexScss['root-left']}>
             <div class={indexScss['root-left-icon']}>

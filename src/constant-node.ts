@@ -10,14 +10,15 @@ export type LocalMusicItem = {
   fullName: string;
   /** 文件路径 */
   path: string;
-  /** 封面 */
+  /** 信息 */
   info: {
     /** 作者 */
     artist: string | undefined;
     /** 歌曲名称 */
     title: string | undefined;
-    cover: string | undefined;
   };
   /** 总时长 */
   duration?: number;
+  /** 封面 */
+  cover?: string;
 };

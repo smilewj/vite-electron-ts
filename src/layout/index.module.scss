@@ -5,12 +5,23 @@
   display: flex;
   --layout-left-width: 210px;
   --layout-box-shadow-color: #00000010;
+  --music-list-item-border-bottom-color: transparent;
+  --music-list-item-light-color: rgba(245, 244, 244, 0.6);
+  &-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background: var(--page-background);
+    background-size: cover;
+    filter: blur(4px);
+  }
   &-left {
     width: var(--layout-left-width);
     height: 100%;
     box-shadow: 2px 0 6px var(--layout-box-shadow-color);
     display: flex;
     flex-direction: column;
+    z-index: 2;
     &-icon {
       display: flex;
       align-items: center;
@@ -34,6 +45,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    z-index: 2;
   }
 }
 

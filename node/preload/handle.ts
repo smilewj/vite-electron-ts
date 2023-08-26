@@ -4,7 +4,7 @@ import store from '../store';
 import path from 'path';
 import md5 from 'js-md5';
 import fs from 'fs';
-import { unitGetAudioDuration, unitGetMusicInfo } from '../unit';
+import { unitGetAudioDuration, unitGetMusicCoverApi, unitGetMusicInfo } from '../unit';
 import { handleReadLyricSync } from './lyric';
 
 export default function initIpcMainHandle() {
@@ -28,19 +28,24 @@ async function handleSelectMusicFiles() {
   };
   const { canceled, filePaths } = await dialog.showOpenDialog(options);
   if (!canceled) {
-    const listPromise = filePaths.map(async (filePath) => {
+    const list = [];
+    for (let i = 0; i < filePaths.length; i++) {
+      const filePath = filePaths[i];
+      const name = path.basename(filePath, path.extname(filePath));
       const info = unitGetMusicInfo(filePath);
       const duration = await unitGetAudioDuration(filePath);
-      return {
-        name: path.basename(filePath, path.extname(filePath)),
+      const cover = await unitGetMusicCoverApi({ duration, name, ...info });
+      list.push({
+        name,
         fullName: path.basename(filePath),
         path: filePath,
         id: md5(filePath),
         info,
         duration,
-      };
-    });
-    return await Promise.all(listPromise);
+        cover,
+      });
+    }
+    return list;
   }
 }
 

@@ -87,14 +87,14 @@ export function useMusicPlayerUI() {
       <div class={indexScss['player-ui']}>
         <div class={indexScss['player-ui-left']}>
           <div class={indexScss['player-ui-left-image']}>
-            {cm?.info?.cover ? <img src={cm.info.cover} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
+            {cm?.cover ? <img src={cm.cover} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
             <div class={indexScss['player-ui-left-image-action']} onClick={() => router.push({ name: 'playing' })}>
               <CommonIconVue icon="icon-xiangshang" class="font26" />
             </div>
           </div>
           <div class={indexScss['player-ui-left-info']}>
             <div class={indexScss['player-ui-left-info-name']}>{cm?.name}</div>
-            <div class={indexScss['player-ui-left-info-lyric']}>{currentLyric.value?.text}</div>
+            {cm && <div class={indexScss['player-ui-left-info-lyric']}>{currentLyric.value?.text}</div>}
           </div>
         </div>
         <div class={indexScss['player-ui-center']}>
@@ -156,5 +156,6 @@ export function useMusicPlayerUI() {
 
   return {
     renderPlayerUI: render,
+    playingMusic,
   };
 }

@@ -9,6 +9,7 @@ import iconEmpty from '@/assets/images/music-empty.svg';
 import elConfirm from '@/hooks/el-confirm';
 import { initActionFunction } from '../page-hook';
 import type { LocalMusicItem } from '@/constant-node';
+import { getLoadingInstance, loadingService } from '@/hooks/el-loading-service';
 
 /**
  * 首页
@@ -25,13 +26,19 @@ export default defineComponent({
      * 添加本地音乐
      */
     async function handleSelectFiles() {
-      const res = await window.electronAPI.selectMusicFiles();
-      if (!res) return;
-      const localMusics =
-        (await window.electronAPI.storeGet<LocalMusicItem[] | undefined>(musicsElectronStoreKey)) || [];
-      const filterRes = res.filter((it) => !localMusics.map((it) => it.path).includes(it.path));
-      const newMusics = [...filterRes, ...localMusics];
-      appStore.setLocalMusics(newMusics);
+      try {
+        loadingService({ text: '添加中...' });
+        const res = await window.electronAPI.selectMusicFiles();
+        if (!res) return;
+        const localMusics =
+          (await window.electronAPI.storeGet<LocalMusicItem[] | undefined>(musicsElectronStoreKey)) || [];
+        const filterRes = res.filter((it) => !localMusics.map((it) => it.path).includes(it.path));
+        const newMusics = [...filterRes, ...localMusics];
+        appStore.setLocalMusics(newMusics);
+      } finally {
+        const instance = getLoadingInstance();
+        if (instance) instance.close();
+      }
     }
 
     /**
