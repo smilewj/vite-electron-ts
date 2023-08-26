@@ -21,6 +21,12 @@ export const playingMusicSessionKey = 'SESSION_MUSIC_PLAYING';
  */
 export const loveElectronStoreKey = 'MUSICS_LOVE';
 
+
+/**
+ * 存储在本地文件中播放顺序的key
+ */
+export const playOrderElectronKey = 'PLAY_ORDER';
+
 /**
  * 播放中的音乐
  */
@@ -105,3 +111,12 @@ export type LyricItemType = {
   time: number;
   text: string;
 };
+
+/**
+ * 播放顺序
+ */
+export enum PlayOrderEnum {
+  '顺序',
+  '随机',
+  '单曲',
+}

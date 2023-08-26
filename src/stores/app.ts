@@ -5,6 +5,8 @@ import {
   loveElectronStoreKey,
   type SessionPlayingMusicType,
   playingMusicSessionKey,
+  PlayOrderEnum,
+  playOrderElectronKey,
 } from '@/constant';
 import type { LocalMusicItem } from '@/constant-node';
 import storage from '@/utils/storage';
@@ -24,6 +26,8 @@ export const useAppStore = defineStore('app', () => {
   const loveMusicIds = ref<string[]>([]);
   /** 我喜欢的音乐列表 */
   const loveMusics = computed(() => localMusics.value.filter((it) => loveMusicIds.value.includes(it.id)));
+  /** 播放顺序 */
+  const playOrder = ref<PlayOrderEnum>(PlayOrderEnum.顺序);
 
   /**
    * 设置音乐列表
@@ -119,7 +123,25 @@ export const useAppStore = defineStore('app', () => {
     return loveMusicIds.value.includes(musicId);
   }
 
+  /**
+   * 设置播放顺序
+   * @param order
+   */
+  async function setPlayOrder(order: PlayOrderEnum) {
+    await window.electronAPI.storeSet({ key: playOrderElectronKey, value: order });
+    playOrder.value = order;
+  }
+
+  /**
+   * 读取本地存储的播放顺序
+   */
+  async function getElectronPlayOrder() {
+    const res = await window.electronAPI.storeGet<PlayOrderEnum | undefined>(playOrderElectronKey);
+    playOrder.value = res || PlayOrderEnum.顺序;
+  }
+
   return {
+    playOrder,
     localMusics,
     playingMusic,
     loveMusics,
@@ -133,5 +155,7 @@ export const useAppStore = defineStore('app', () => {
     setLoveMusicId,
     isLoveMusicId,
     setSessionPlayingMusic,
+    setPlayOrder,
+    getElectronPlayOrder,
   };
 });

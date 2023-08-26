@@ -2,9 +2,8 @@ import type { IpcMainInvokeEvent } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import axios from 'axios';
 import type { LocalMusicItem } from '../../src/constant-node';
-import { unitGetMusic } from '../unit';
+import { service, unitGetMusic } from '../unit';
 
 // 获取当前电脑登录用户的根目录
 const userHomeDir = os.homedir();
@@ -41,7 +40,7 @@ async function getLyricByApi(music: LocalMusicItem) {
   const musicId = _music.id;
   try {
     const apiUrl = `https://music.163.com/api/song/media?id=${musicId}`;
-    const res = await axios.get(apiUrl, {
+    const res = await service.get(apiUrl, {
       headers: {
         Cookie: 'NMTID=00Od6gdHDwTtiF9ukYnglMmej1QGdIAAAGJ8weh7Q',
       },

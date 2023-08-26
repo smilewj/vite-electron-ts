@@ -95,3 +95,14 @@ export function findCurrentLyric(time: number, lyrics: LyricItemType[]) {
   }
   return null;
 }
+
+/**
+ * 随机获取数字
+ */
+export function getRandomNumber(min: number, max: number, exclude?: number): number {
+  let res = Math.floor(Math.random() * (max - min + 1)) + min;
+  if (typeof exclude === 'number' && res === exclude) {
+    res = getRandomNumber(min, max, exclude);
+  }
+  return res;
+}

@@ -9,10 +9,17 @@ import {
   type LyricItemType,
   type PlayerType,
   type PromisePlayerType,
+  PlayOrderEnum,
 } from '@/constant';
 import { useRouter } from 'vue-router';
 import { findCurrentLyric } from '@/utils/func';
 import { initLyric } from '@/pages/page-hook';
+
+const playOrderMap = [
+  { order: PlayOrderEnum.顺序, icon: 'icon-xunhuan', label: '顺序' },
+  { order: PlayOrderEnum.随机, icon: 'icon-suijibofang', label: '随机' },
+  { order: PlayOrderEnum.单曲, icon: 'icon-danquxunhuan', label: '单曲' },
+];
 
 export function useMusicPlayerUI() {
   const player = inject<PlayerType>(playerSymbol);
@@ -25,6 +32,8 @@ export function useMusicPlayerUI() {
   const playingMusic = computed(() => appStore.playingMusic);
   const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
   const playStatus = computed(() => sessionPlayingMusic.value?.status);
+  const playOrderOption = computed(() => playOrderMap.find((it) => it.order === appStore.playOrder) || playOrderMap[0]);
+
   const currentTime = computed(() => {
     const current = sessionPlayingMusic.value?.current || 0;
     const m = Math.floor(current / 60)
@@ -63,6 +72,15 @@ export function useMusicPlayerUI() {
     const currentTime = player?.elRef.value?.currentTime || 0;
     const ci = findCurrentLyric(currentTime, lyrics.value);
     currentLyric.value = ci?.lyric;
+  }
+
+  function handleChangePlayOrder() {
+    const currentIndex = playOrderMap.findIndex((it) => it.order === playOrderOption.value.order);
+    let nextIndex = currentIndex + 1;
+    if (nextIndex >= playOrderMap.length) {
+      nextIndex = 0;
+    }
+    appStore.setPlayOrder(playOrderMap[nextIndex].order);
   }
 
   onMounted(async () => {
@@ -120,6 +138,9 @@ export function useMusicPlayerUI() {
           )}
           <ElLink type="default" underline={false} onClick={() => player?.next()}>
             <CommonIconVue icon="icon-xiayishou" class="font26" />
+          </ElLink>
+          <ElLink type="default" underline={false} class="ml8" onClick={() => handleChangePlayOrder()}>
+            <CommonIconVue icon={playOrderOption.value.icon} class="font16" />
           </ElLink>
         </div>
         <div class={indexScss['player-ui-right']}>

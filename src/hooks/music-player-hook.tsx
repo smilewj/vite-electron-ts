@@ -1,15 +1,17 @@
-import type {
-  AudioCtxType,
-  PlayerType,
-  PlayingMusicType,
-  PromisePlayerType,
-  SessionPlayingMusicType,
+import {
+  PlayOrderEnum,
+  type AudioCtxType,
+  type PlayerType,
+  type PlayingMusicType,
+  type PromisePlayerType,
+  type SessionPlayingMusicType,
 } from '@/constant';
 import { useAppStore } from '@/stores/app';
 import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
 import debMessage from './deb-message';
 import { useRoute } from 'vue-router';
 import type { LocalMusicItem } from '@/constant-node';
+import { getRandomNumber } from '@/utils/func';
 
 /**
  * 初始化歌曲数据
@@ -18,6 +20,7 @@ export function initMusicData(playerPromise: PromisePlayerType) {
   const appStore = useAppStore();
 
   function init() {
+    appStore.getElectronPlayOrder();
     appStore.getLocalMusics();
     appStore.getLoveMusics();
     appStore.getPlayingMusic().then(async (playingMusic) => {
@@ -113,6 +116,7 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
 
   const playingMusic = computed(() => appStore.playingMusic);
   const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
+  const playOrder = computed(() => appStore.playOrder);
 
   const route = useRoute();
   // 当前的播放列表
@@ -226,10 +230,18 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
       stopPlay();
       return;
     }
-    const nextIndex = currentIndex + 1;
-    if (nextIndex >= currentMusics.value.length) {
-      stopPlay();
-      return;
+    let nextIndex: number = currentIndex;
+    if (playOrder.value === PlayOrderEnum.顺序) {
+      nextIndex = currentIndex + 1;
+      if (nextIndex >= currentMusics.value.length) {
+        nextIndex = 0;
+      }
+    }
+    if (playOrder.value === PlayOrderEnum.随机) {
+      nextIndex = getRandomNumber(0, currentMusics.value.length, currentIndex);
+    }
+    if (playOrder.value === PlayOrderEnum.单曲) {
+      nextIndex = currentIndex;
     }
     const nextMusic = currentMusics.value[nextIndex];
     startPlayMusic(nextMusic);
@@ -244,11 +256,21 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
       stopPlay();
       return;
     }
-    const prevIndex = currentIndex - 1;
-    if (prevIndex < 0) {
-      stopPlay();
-      return;
+
+    let prevIndex: number = currentIndex;
+    if (playOrder.value === PlayOrderEnum.顺序) {
+      prevIndex = currentIndex - 1;
+      if (prevIndex < 0) {
+        prevIndex = currentMusics.value.length - 1;
+      }
     }
+    if (playOrder.value === PlayOrderEnum.随机) {
+      prevIndex = getRandomNumber(0, currentMusics.value.length, currentIndex);
+    }
+    if (playOrder.value === PlayOrderEnum.单曲) {
+      prevIndex = currentIndex;
+    }
+
     const prevMusic = currentMusics.value[prevIndex];
     startPlayMusic(prevMusic);
   }

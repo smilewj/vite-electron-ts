@@ -5,6 +5,8 @@ import path from 'path';
 import isDev from 'electron-is-dev';
 import axios from 'axios';
 
+export const service = axios.create({ timeout: 5000 });
+
 /**
  * 获取音频的总时长
  * @param filePath
@@ -172,7 +174,7 @@ async function getMusicsByApi(name: string) {
   try {
     const apiUrl = `https://music.163.com/api/search/pc?type=1&s=${name}&limit=10&offset=0`;
 
-    const res = await axios.get(apiUrl, {
+    const res = await service.get(apiUrl, {
       headers: {
         Cookie: 'NMTID=00Od6gdHDwTtiF9ukYnglMmej1QGdIAAAGJ8weh7Q',
       },
