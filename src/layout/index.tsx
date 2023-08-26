@@ -22,7 +22,7 @@ export default defineComponent({
       if (coverUrl.value) {
         style['--page-background'] = `url(${coverUrl.value})`;
         style['--music-list-item-light-color'] = 'transparent';
-        style['--music-list-item-border-bottom-color'] = 'rgba(245, 244, 244, 0.6)';
+        style['--music-list-item-border-bottom-color'] = 'rgba(245, 244, 244, 0.4)';
       }
       return style;
     });
