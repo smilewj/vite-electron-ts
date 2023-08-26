@@ -34,8 +34,7 @@ export async function handleReadLyricSync(event: IpcMainInvokeEvent, music: Loca
  */
 async function getLyricByApi(music: LocalMusicItem) {
   const { duration, name, info } = music;
-  const { title, artist } = info;
-  const _music = await unitGetMusic({ duration, name, title, artist });
+  const _music = await unitGetMusic({ duration, name, ...info  });
   if (!_music) return undefined;
   const musicId = _music.id;
   try {

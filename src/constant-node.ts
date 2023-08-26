@@ -19,6 +19,4 @@ export type LocalMusicItem = {
   };
   /** 总时长 */
   duration?: number;
-  /** 封面 */
-  cover?: string;
 };

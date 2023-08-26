@@ -4,8 +4,9 @@ import store from '../store';
 import path from 'path';
 import md5 from 'js-md5';
 import fs from 'fs';
-import { unitGetAudioDuration, unitGetMusicCoverApi, unitGetMusicInfo } from '../unit';
+import { unitGetAudioDuration, unitGetMusicInfo } from '../unit';
 import { handleReadLyricSync } from './lyric';
+import { handleReadCoverSync } from './cover';
 
 export default function initIpcMainHandle() {
   ipcMain.handle(CHANNEL_KEYS.OPEN_MUSIC_FILES, handleSelectMusicFiles);
@@ -14,6 +15,7 @@ export default function initIpcMainHandle() {
   ipcMain.handle(CHANNEL_KEYS.STORE_DELETE, handleStoreDelete);
   ipcMain.handle(CHANNEL_KEYS.READ_FILE_SYNC, handleReadFileSync);
   ipcMain.handle(CHANNEL_KEYS.READ_LYRIC_SYNC, handleReadLyricSync);
+  ipcMain.handle(CHANNEL_KEYS.READ_COVER_SYNC, handleReadCoverSync);
 }
 
 /**
@@ -34,7 +36,6 @@ async function handleSelectMusicFiles() {
       const name = path.basename(filePath, path.extname(filePath));
       const info = unitGetMusicInfo(filePath);
       const duration = await unitGetAudioDuration(filePath);
-      const cover = await unitGetMusicCoverApi({ duration, name, ...info });
       list.push({
         name,
         fullName: path.basename(filePath),
@@ -42,7 +43,6 @@ async function handleSelectMusicFiles() {
         id: md5(filePath),
         info,
         duration,
-        cover,
       });
     }
     return list;

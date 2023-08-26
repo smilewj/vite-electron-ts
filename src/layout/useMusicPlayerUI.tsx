@@ -13,7 +13,7 @@ import {
 } from '@/constant';
 import { useRouter } from 'vue-router';
 import { findCurrentLyric } from '@/utils/func';
-import { initLyric } from '@/pages/page-hook';
+import { initCoverUrl, initLyric } from '@/pages/page-hook';
 
 const playOrderMap = [
   { order: PlayOrderEnum.顺序, icon: 'icon-xunhuan', label: '顺序' },
@@ -33,6 +33,8 @@ export function useMusicPlayerUI() {
   const sessionPlayingMusic = computed(() => appStore.sessionPlayingMusic);
   const playStatus = computed(() => sessionPlayingMusic.value?.status);
   const playOrderOption = computed(() => playOrderMap.find((it) => it.order === appStore.playOrder) || playOrderMap[0]);
+
+  const { coverUrl } = initCoverUrl(playingMusic);
 
   const currentTime = computed(() => {
     const current = sessionPlayingMusic.value?.current || 0;
@@ -105,7 +107,7 @@ export function useMusicPlayerUI() {
       <div class={indexScss['player-ui']}>
         <div class={indexScss['player-ui-left']}>
           <div class={indexScss['player-ui-left-image']}>
-            {cm?.cover ? <img src={cm.cover} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
+            {coverUrl.value ? <img src={coverUrl.value} alt="" /> : <CommonIconVue icon="icon-Ser" class="font24" />}
             <div class={indexScss['player-ui-left-image-action']} onClick={() => router.push({ name: 'playing' })}>
               <CommonIconVue icon="icon-xiangshang" class="font26" />
             </div>

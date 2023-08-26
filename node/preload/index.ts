@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   storeDelete: (key: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.STORE_DELETE, key, ...args),
   readFileSync: (path: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.READ_FILE_SYNC, path, ...args),
   readLyricSync: (path: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.READ_LYRIC_SYNC, path, ...args),
+  readCoverSync: (path: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.READ_COVER_SYNC, path, ...args),
 });

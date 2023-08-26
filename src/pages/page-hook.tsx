@@ -119,3 +119,31 @@ export function initLyric(musicRef: Ref<LocalMusicItem | PlayingMusicType | unde
     loading,
   };
 }
+/**
+ * 获取歌曲封面
+ * @param musicRef
+ * @returns
+ */
+export function initCoverUrl(musicRef: Ref<LocalMusicItem | PlayingMusicType | undefined>) {
+  const [coverUrl, loading] = [ref<string>(), ref(false)];
+  async function loadData() {
+    try {
+      loading.value = true;
+      if (!musicRef.value) {
+        throw '暂无播放的歌曲';
+      }
+      coverUrl.value = await window.electronAPI.readCoverSync(musicRef.value);
+    } catch {
+      coverUrl.value = undefined;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  watchEffect(loadData);
+
+  return {
+    coverUrl,
+    loading,
+  };
+}

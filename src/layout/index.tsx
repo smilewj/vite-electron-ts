@@ -5,6 +5,7 @@ import { useMenuRender } from './useMenuRender';
 import { useContentRender } from './useContentRender';
 import { useMusicPlayerUI } from './useMusicPlayerUI';
 import { initAnimationBg } from '@/views/AnimationBg';
+import { initCoverUrl } from '@/pages/page-hook';
 
 export default defineComponent({
   props: {},
@@ -14,7 +15,7 @@ export default defineComponent({
     const { renderPlayerUI, playingMusic } = useMusicPlayerUI();
     const { abRender } = initAnimationBg();
 
-    const coverUrl = computed(() => playingMusic.value?.cover);
+    const { coverUrl } = initCoverUrl(playingMusic);
 
     const rootStyle = computed(() => {
       const style: CSSProperties = {};

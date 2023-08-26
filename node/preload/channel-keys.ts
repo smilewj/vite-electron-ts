@@ -12,4 +12,6 @@ export enum CHANNEL_KEYS {
   READ_FILE_SYNC = 'node:readFileSync',
   /** 读取歌词 */
   READ_LYRIC_SYNC = 'node:readLyricSync',
+  /** 获取封面图片 */
+  READ_COVER_SYNC = 'node:readCoverSync',
 }
