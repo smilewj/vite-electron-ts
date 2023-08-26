@@ -38,7 +38,7 @@ export default defineComponent({
               {loveMusics.value.map((it) => {
                 return (
                   <div class={rootClass['list-item']}>
-                    <div class={rootClass['list-item-name']}>{it.fullName}</div>
+                    <div class={rootClass['list-item-name']}>{it.name}</div>
                     <div class={rootClass['list-item-right']}>
                       <ElLink underline={false} class="mr8 color-danger" onClick={() => setLove(it.id)}>
                         <CommonIconVue icon="icon-xihuan1" class="font16" />

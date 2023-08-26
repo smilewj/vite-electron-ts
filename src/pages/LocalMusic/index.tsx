@@ -99,7 +99,7 @@ export default defineComponent({
                         sessionPlayingMusic.value?.id === it.id ? rootClass.active : '',
                       ]}
                     >
-                      {it.fullName}
+                      {it.name}
                     </div>
                     <div class={rootClass['list-item-right']}>
                       <ElLink
