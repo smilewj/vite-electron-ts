@@ -1,6 +1,6 @@
 import { playerSymbol, type LyricItemType, type PlayerType, type PlayingMusicType } from '@/constant';
 import { useAppStore } from '@/stores/app';
-import { computed, inject, ref, watchEffect, type Ref } from 'vue';
+import { computed, inject, ref, type Ref, watch } from 'vue';
 import rootClass from './index.module.scss';
 import { ElLink } from 'element-plus';
 import CommonIconVue from '@/components/CommonIcon.vue';
@@ -95,6 +95,8 @@ export function useRouterBackRender(delta: number = -1, isBlack = false) {
  */
 export function initLyric(musicRef: Ref<LocalMusicItem | PlayingMusicType | undefined>) {
   const [lyrics, loading] = [ref<LyricItemType[]>([]), ref(false)];
+  const musicId = computed(() => musicRef.value?.id);
+
   async function loadData() {
     try {
       loading.value = true;
@@ -112,7 +114,7 @@ export function initLyric(musicRef: Ref<LocalMusicItem | PlayingMusicType | unde
     }
   }
 
-  watchEffect(loadData);
+  watch(musicId, loadData, { immediate: true });
 
   return {
     lyrics,
@@ -126,21 +128,21 @@ export function initLyric(musicRef: Ref<LocalMusicItem | PlayingMusicType | unde
  */
 export function initCoverUrl(musicRef: Ref<LocalMusicItem | PlayingMusicType | undefined>) {
   const [coverUrl, loading] = [ref<string>(), ref(false)];
+  const musicId = computed(() => musicRef.value?.id);
+
   async function loadData() {
     try {
       loading.value = true;
       if (!musicRef.value) {
-        throw '暂无播放的歌曲';
+        return;
       }
       coverUrl.value = await window.electronAPI.readCoverSync(musicRef.value);
-    } catch {
-      coverUrl.value = undefined;
     } finally {
       loading.value = false;
     }
   }
 
-  watchEffect(loadData);
+  watch(musicId, loadData, { immediate: true });
 
   return {
     coverUrl,
