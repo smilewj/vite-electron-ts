@@ -11,7 +11,7 @@ import { parseLyrics } from '@/utils/func';
 /**
  * 按钮方法
  */
-export function initActionFunction(musicsRef: Ref<LocalMusicItem[]>) {
+export function initActionFunction() {
   const appStore = useAppStore();
   const player = inject<PlayerType>(playerSymbol);
   const playingMusic = computed(() => appStore.playingMusic);
@@ -22,13 +22,8 @@ export function initActionFunction(musicsRef: Ref<LocalMusicItem[]>) {
    * 如果存在正在播放的音乐，则继续播放
    */
   function handlePlayAll() {
-    if (!musicsRef.value.length || !player) return;
-    if (playingMusic.value) {
-      player.play();
-      return;
-    }
-    const firstMusic = musicsRef.value[0];
-    player.start(firstMusic);
+    if (!player) return;
+    player.play();
   }
 
   /**

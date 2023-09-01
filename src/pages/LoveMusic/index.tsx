@@ -14,8 +14,7 @@ export default defineComponent({
     const appStore = useAppStore();
     const loveMusics = computed(() => appStore.loveMusics);
 
-    const { player, sessionPlayingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } =
-      initActionFunction(loveMusics);
+    const { player, sessionPlayingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } = initActionFunction();
 
     return function () {
       return (

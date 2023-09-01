@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron';
 import { CHANNEL_KEYS } from './channel-keys';
 
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -9,4 +9,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readFileSync: (path: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.READ_FILE_SYNC, path, ...args),
   readLyricSync: (path: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.READ_LYRIC_SYNC, path, ...args),
   readCoverSync: (path: string, ...args: any[]) => ipcRenderer.invoke(CHANNEL_KEYS.READ_COVER_SYNC, path, ...args),
+  mediaNext: (callback: (event: IpcRendererEvent, ...args: any[]) => void) =>
+    ipcRenderer.on('media-next-track', callback),
+  mediaPlayPause: (callback: (event: IpcRendererEvent, ...args: any[]) => void) =>
+    ipcRenderer.on('media-play-pause', callback),
+  mediaPrevious: (callback: (event: IpcRendererEvent, ...args: any[]) => void) =>
+    ipcRenderer.on('media-previous-track', callback),
 });

@@ -199,10 +199,14 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
    */
   function playMusic() {
     if (!audioRef.value) return;
+
     if (playingMusic.value) {
       audioRef.value.play();
       return;
     }
+    if (!currentMusics.value.length) return;
+    const firstMusic = currentMusics.value[0];
+    startPlayMusic(firstMusic);
   }
 
   /**
@@ -227,7 +231,7 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
   function playNextMusic() {
     const currentIndex = currentMusics.value.findIndex((it) => it.id === playingMusic.value?.id);
     if (currentIndex === -1) {
-      stopPlay();
+      playMusic();
       return;
     }
     let nextIndex: number = currentIndex;
@@ -253,7 +257,7 @@ function createMusicControlsPlayer(audioRef: Ref<HTMLMediaElement | undefined>) 
   function playPrevMusic() {
     const currentIndex = currentMusics.value.findIndex((it) => it.id === playingMusic.value?.id);
     if (currentIndex === -1) {
-      stopPlay();
+      playMusic();
       return;
     }
 

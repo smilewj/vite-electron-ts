@@ -8,6 +8,7 @@ import isDev from 'electron-is-dev';
 import initIpcMainHandle from './preload/handle';
 import setTray from './set-tray';
 import setDock from './set-dock';
+import setLocalShortcut from './set-local-shortcut';
 
 app.whenReady().then(() => {
   initIpcMainHandle();
@@ -27,6 +28,7 @@ app.whenReady().then(() => {
 
   setMenus();
   setDock();
+  setLocalShortcut(win);
 
   if (!isDev) {
     setTray(win);

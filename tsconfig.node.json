@@ -7,7 +7,8 @@
     "playwright.config.*",
     "plugins/**/*.ts",
     "node/**/*.ts",
-    "src/constant-node.ts"
+    "src/constant-node.ts",
+    "src/renderer.d.ts"
   ],
   "compilerOptions": {
     "ignoreDeprecations": "5.0",

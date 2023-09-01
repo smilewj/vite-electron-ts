@@ -19,8 +19,7 @@ export default defineComponent({
     const appStore = useAppStore();
     const localMusics = computed(() => appStore.localMusics);
 
-    const { player, sessionPlayingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } =
-      initActionFunction(localMusics);
+    const { player, sessionPlayingMusic, handlePlayAll, handleStop, handlePlayMusic, setLove } = initActionFunction();
 
     /**
      * 添加本地音乐
